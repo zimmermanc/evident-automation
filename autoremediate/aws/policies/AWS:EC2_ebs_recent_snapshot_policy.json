@@ -1,0 +1,16 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1493751397000",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateSnapshot",
+                "ec2:DescribeSnapshots"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
