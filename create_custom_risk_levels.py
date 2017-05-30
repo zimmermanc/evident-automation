@@ -46,7 +46,8 @@ NUM_OF_SIGS = 2 # In hundreds
 
 #=== End Configuration ===
 
-# Helper method - process API requests
+#=== Helper Methods ===
+# Process API requests
 def call_api(action, url, data, count = 0):
     # Construct ESP API URL
     ev_create_url = 'https://api.evident.io%s' % (url)
@@ -110,7 +111,7 @@ def call_api(action, url, data, count = 0):
     
     return ev_response_json
 
-# Helper method - get id from relationship link
+# Get id from relationship link
 # Example: http://test.host/api/v2/signatures/1003.json
 # Should return 1003
 def get_id(link):
@@ -118,7 +119,9 @@ def get_id(link):
     b = a[len(a) - 1].split(".")
     return int(b[0])
 
-# === Begin Main Script ===
+#=== End Helper Methods ===
+
+#=== Main Script ===
 
 # Variables
 num_of_fails = 0
@@ -195,4 +198,4 @@ if num_of_fails == 0:
 else:
     print('Completed, but %d signatures failed to update' % num_of_fails)
 
-# === End Main Script ===
+#=== End Main Script ===
