@@ -6,6 +6,8 @@ For more information including an Auto-Remediation walkthrough, please see [Evid
 
 ---
 
+## Repo
+
 Directory | Contents
 --------- | ---------
 lambda    | Auto-Remediation Lambda functions
@@ -17,8 +19,8 @@ policies  | IAM Role policies with the necessary permissions to run the correspo
 
 1. An ESP Signature via Amazon SNS integration triggers an alert and send it to Lambda.
 2. The Lambda auto-remediation function is launched and performs the following:
-    a. Checks the ESP Signature status; Pass/Fail?
-    b. If Fail; run checks to verify and remediate, log and exit.
+    1. Checks the ESP Signature status; Pass/Fail?
+    2. If Fail; run checks to verify and remediate, log and exit.
 3. In some cases it may make sense to bypass the checks and remediate immediately.  This accomplishes two things: 1) Faster Lambda function execution, and 2) Performs fewer AWS API calls.
 
 For more information on ESP integrations, please see [Evident Docs](http://docs.evident.io/#integrations)
