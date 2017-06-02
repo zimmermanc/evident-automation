@@ -4,8 +4,6 @@ A core design goal and philosophy at **Evident.io** is to provide our customers 
 
 For more information including an Auto-Remediation walkthrough, please see [Evident Docs](http://docs.evident.io/#auto-remediation-via-lambda-walkthrough)
 
----
-
 ## Repo
 
 Directory | Contents
