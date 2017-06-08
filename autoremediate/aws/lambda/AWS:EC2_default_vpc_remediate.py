@@ -4,14 +4,16 @@
 ## PROVIDED AS IS WITH NO WARRANTY OR GUARANTEES
 ## Copyright (c) 2016 Evident.io, Inc., All Rights Reserved
 ##
-## ************************** !! W A R N I N G !! **************************
-## *            Deleting the default VPC is a permanent action.            *
-## * You must contact AWS Support if you want to create a new default VPC. *
-## ************************************************************************* 
+## ******************************* !! W A R N I N G !! ********************************
+## *                 Deleting the default VPC is a permanent action.                  *
+## *      You must contact AWS Support if you want to create a new default VPC.       *
+## *                                                                                  *
+## * See: https://aws.amazon.com/premiumsupport/knowledge-center/deleted-default-vpc/ *
+## ************************************************************************************
 ##
-## ---
+## ---------------------------------------------------------------
 ## Use lambda policy: ../policies/AWS:EC2_default_vpc_policy.json
-## ---
+## ---------------------------------------------------------------
 ##
 
 from __future__ import print_function
