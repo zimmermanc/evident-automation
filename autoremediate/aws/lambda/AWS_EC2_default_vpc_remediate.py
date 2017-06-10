@@ -75,7 +75,13 @@ def auto_remediate(region, vpc_id):
     """
 
     ec2 = boto3.client('ec2', region_name=region)
-    vpc = ec2.describe_vpcs(VpcIds=[ vpc_id ])['Vpcs'][0]['IsDefault']
+
+    try:
+      vpc = ec2.describe_vpcs(VpcIds=[ vpc_id ])
+    except Exception as e:
+      return vpc_id + ' in region ' + region + ' does not exist.'
+    else:
+      vpc = vpc['Vpcs'][0]['IsDefault']
 
     if vpc != True:
       return vpc_id + ' in region ' + region + ' is not the default.'
