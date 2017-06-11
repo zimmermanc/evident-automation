@@ -76,6 +76,7 @@ def auto_remediate(region, vpc_id):
 
     ec2 = boto3.client('ec2', region_name=region)
 
+    # Does the vpc_id exist?
     try:
       vpc = ec2.describe_vpcs(VpcIds=[ vpc_id ])
     except Exception as e:
@@ -83,11 +84,18 @@ def auto_remediate(region, vpc_id):
     else:
       vpc = vpc['Vpcs'][0]['IsDefault']
 
+    # Is vpc_id the default?
     if vpc != True:
       return vpc_id + ' in region ' + region + ' is not the default.'
     else:
       print ('=> Autoremediating default VPC ' + vpc_id, 'in region ' + region)
 
+    # Are there any existing resources?  Since most resources attach an ENI, let's check..
+    eni = ec2.describe_network_interfaces(Filters=[ {'Name': 'vpc-id', 'Values': [ vpc_id ]} ])['NetworkInterfaces']
+    if eni:
+      return vpc_id + ' in region ' + region + ' has existing resources.'
+
+    # Do the work..
     remove_ingw(ec2, vpc_id)
     remove_subs(ec2, vpc_id)
     remove_rtbs(ec2, vpc_id)
