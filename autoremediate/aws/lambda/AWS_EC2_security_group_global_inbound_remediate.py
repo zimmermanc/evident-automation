@@ -18,8 +18,8 @@ import sys
 
 # Options
 #
-admin_port_list = [ 'tcp-22', 'tcp-23', 'tcp-3389' ]
-global_cidr     = "0.0.0.0/0"
+admin_port_list  = [ 'tcp-22', 'tcp-23', 'tcp-3389' ]
+global_cidr_list = [ '0.0.0.0/0', '::/0' ]
 
 print('=> Loading function')
 
@@ -77,7 +77,7 @@ def auto_remediate(region, sg_id):
             for admin_port in admin_port_list:
                 proto = re.split('-', admin_port)[0]; port = re.split('-', admin_port)[1]
                 find_port='true' if from_port <= port <= to_port else 'false'
-                if cidr_ip == global_cidr and ip_protocol.lower() == proto and find_port == 'true':
+                if cidr_ip in global_cidr_list and ip_protocol.lower() == proto and find_port == 'true':
 
                     try:
                         ec2.revoke_security_group_ingress(GroupId=sg_id, IpProtocol=ip_protocol, FromPort=from_port, ToPort=to_port, CidrIp=cidr_ip)
