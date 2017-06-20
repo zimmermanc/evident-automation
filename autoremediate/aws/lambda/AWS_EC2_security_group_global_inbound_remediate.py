@@ -4,6 +4,10 @@
 ## PROVIDED AS IS WITH NO WARRANTY OR GUARANTEES
 ## Copyright (c) 2016 Evident.io, Inc., All Rights Reserved
 ##
+## ---------------------------------------------------------------------------------
+## Use lambda policy: ../policies/AWS_EC2_security_group_global_inbound_policy.json
+## ---------------------------------------------------------------------------------
+##
 
 from __future__ import print_function
 
