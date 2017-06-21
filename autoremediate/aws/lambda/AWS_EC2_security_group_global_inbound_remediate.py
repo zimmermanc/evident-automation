@@ -11,15 +11,14 @@
 
 from __future__ import print_function
 
+## Options
+admin_port_list  = [ 'tcp-22', 'tcp-23', 'tcp-3389' ]
+global_cidr_list = [ '0.0.0.0/0', '::/0' ]
+
 import json
 import re
 import boto3
 import sys
-
-# Options
-#
-admin_port_list  = [ 'tcp-22', 'tcp-23', 'tcp-3389' ]
-global_cidr_list = [ '0.0.0.0/0', '::/0' ]
 
 print('=> Loading function')
 
@@ -62,29 +61,53 @@ def auto_remediate(region, sg_id):
     Auto-Remediate - Removes Admin ports from the offending security group
     """
 
-    ec2 = boto3.client('ec2',region_name=region)
+    ec2 = boto3.client('ec2', region_name=region)
 
     ip_perms = ec2.describe_security_groups(GroupIds=[ sg_id, ])['SecurityGroups'][0]['IpPermissions']
-
     for ip_perm in ip_perms:
-        from_port = ip_perm['FromPort']
-        to_port = ip_perm['ToPort']
-        ip_protocol = ip_perm['IpProtocol']
+        try:
+            from_port   = ip_perm['FromPort']
+        except Exception as e:
+            continue
+        else:
+            to_port     = ip_perm['ToPort']
+            ip_protocol = ip_perm['IpProtocol']
 
-        for ip_range in ip_perm['IpRanges']:
-            cidr_ip = ip_range['CidrIp']
+        if ip_perm['IpRanges']:
+            IpRanges = 'IpRanges'
+            IpCidr   = 'CidrIp'
+            for ip_range in ip_perm['IpRanges']:
+                cidr_ip = ip_range['CidrIp']
+                remove_sg_rule(ec2, sg_id, from_port, to_port, ip_protocol, cidr_ip, IpRanges, IpCidr)
 
-            for admin_port in admin_port_list:
-                proto = re.split('-', admin_port)[0]; port = re.split('-', admin_port)[1]
-                find_port='true' if from_port <= port <= to_port else 'false'
-                if cidr_ip in global_cidr_list and ip_protocol.lower() == proto and find_port == 'true':
-
-                    try:
-                        ec2.revoke_security_group_ingress(GroupId=sg_id, IpProtocol=ip_protocol, FromPort=from_port, ToPort=to_port, CidrIp=cidr_ip)
-                    except Exception as e:
-                        print('=> Error: ', str(e.message))
-                    else:
-                        print("=> Revoked rule permitting %s/%d-%d from %s" % (ip_protocol, from_port, to_port, sg_id))
+        if ip_perm['Ipv6Ranges']:
+            IpRanges = 'Ipv6Ranges'
+            IpCidr   = 'CidrIpv6'
+            for ip_range in ip_perm['Ipv6Ranges']:
+                cidr_ip = ip_range['CidrIpv6']
+                remove_sg_rule(ec2, sg_id, from_port, to_port, ip_protocol, cidr_ip, IpRanges, IpCidr)
 
     return None
+
+
+def remove_sg_rule(ec2, sg_id, from_port, to_port, ip_protocol, cidr_ip, IpRanges, IpCidr):
+    """
+    Revoke security group ingress
+    """
+
+    for admin_port in admin_port_list:
+        proto = re.split('-', admin_port)[0]
+        port  = re.split('-', admin_port)[1]
+
+        find_port='true' if from_port <= int(port) <= to_port else 'false'
+
+        if cidr_ip in global_cidr_list and ip_protocol.lower() == proto and find_port == 'true':
+            try:
+                ec2.revoke_security_group_ingress(GroupId=sg_id, IpPermissions=[ {'IpProtocol': ip_protocol, 'FromPort': from_port, 'ToPort': to_port, IpRanges: [{ IpCidr: cidr_ip }] } ])
+            except Exception as e:
+                error = str(e.message)
+                if 'rule does not exist' not in error:
+                    print('=> Error: ', error)
+            else:
+                print("=> Revoked rule permitting %s/%d-%d with cidr %s from %s" % (ip_protocol, from_port, to_port, cidr_ip, sg_id))
 
