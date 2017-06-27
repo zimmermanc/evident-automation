@@ -13,7 +13,7 @@ policies  | IAM Role policies with the necessary permissions to run the correspo
 
 ## How it Works...
 
-![Auto-Remediation Flow](../../autoremediate/images/remediate-flow.jpg)
+![Auto-Remediation Flow](../../autoremediate/images/remediate.jpg)
 
 1. Using the AWS API, **ESP** continuously performs checks against custom signatures and policies.
 2. If the resulting analysis determined a signature did not pass, send the failed alert to AWS **SNS** via ESP integrations.
