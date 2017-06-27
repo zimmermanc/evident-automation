@@ -15,10 +15,10 @@ policies  | IAM Role policies with the necessary permissions to run the correspo
 
 ![Auto-Remediation Flow](../../autoremediate/images/remediate-flow.jpg)
 
-1. An ESP Signature via Amazon SNS integration triggers an alert and sends it to Lambda.
-2. The Lambda auto-remediation function is launched and performs the following:
-    1. Checks the ESP Signature status; Pass/Fail?
-    2. If Fail; run checks to verify and remediate, log and exit.
-3. In some cases it may make sense to bypass the checks and remediate immediately.  This accomplishes two things; 1) Faster Lambda function execution, and 2) Performs fewer AWS API calls.
+1. Using the AWS API, **ESP** continuously performs checks against custom signatures and policies.
+2. If the resulting analysis determined a signature did not pass, send the failed alert to AWS **SNS** via ESP integrations.
+3. The AWS SNS service triggers the workflow and launches the AWS **Lambda** auto-remediation function.
+4. Using the AWS API, **Auto-Remediate** and fix the offending issue.
+5. Send the resulting logs to AWS **CloudWatch**.
 
 For more information on ESP integrations, please see [Evident Docs](http://docs.evident.io/#integrations)
