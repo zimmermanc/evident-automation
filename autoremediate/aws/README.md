@@ -19,6 +19,6 @@ policies  | IAM Role policies with the necessary permissions to run the correspo
 2. If the resulting analysis determined a signature did not pass, send the failed alert to AWS **SNS** via ESP integrations.
 3. The AWS SNS service triggers the workflow and launches the AWS **Lambda** auto-remediation function.
 4. Using the AWS API, **Auto-Remediate** and fix the offending issue.
-5. Send the resulting logs to AWS **CloudWatch**.
+5. Send the resulting **logs** to AWS **CloudWatch**.
 
 For more information on ESP integrations, please see [Evident Docs](http://docs.evident.io/#integrations)
