@@ -1,31 +1,38 @@
-### Automation Request
+### ESP Automation Request
 
 ---
 
-#### Type (Choose one):
+#### Request (Choose one):
 
 - [x] Automation Script
 - [ ] Auto-Remediation Function
+
+
+#### Type (Choose one):
+
+- [x] New Project
+- [ ] Feature Enhancement
+- [ ] Bug Report
  
  
 **Required By (mm/dd/yyyy):**
 07/06/2017
 
 
-**Requested By:**
-John Doe
+**Requested By (email addresses separated by commas):**
+john_doe@evident.io
 
 ---
 
-#### ESP Product Area:
+#### Product Area:
 Suppressions
 
 
-#### Description:
+#### Description (If the current behavior is a bug, please provide the steps to reproduce):
 Provide customers with a csv to audit the active suppressions configured in an ESP organization.
 
 
-#### Use Case:
+#### Use Case (What is the expected behavior?):
 The need to audit suppressions includes, but is not limited to, the following questions:
 
 1. What external accounts have suppressions enabled, who did it, when, and what are those suppressions for?
