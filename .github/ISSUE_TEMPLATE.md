@@ -2,13 +2,13 @@
 
 ---
 
-#### Request (Choose one):
+#### Request (Select one):
 
 - [x] Automation Script
 - [ ] Auto-Remediation Function
 
 
-#### Type (Choose one):
+#### Type (Select one):
 
 - [x] New Project
 - [ ] Feature Enhancement
@@ -24,7 +24,7 @@
 07/06/2017
 
 
-#### Requested By (email addresses separated by commas):
+#### Requested By:
 john_doe@evident.io
 
 
