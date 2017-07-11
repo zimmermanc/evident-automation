@@ -15,14 +15,19 @@
 - [ ] Bug Report
  
  
-**Required By (mm/dd/yyyy):**
+ #### Cloud Provider:
+- [x] AWS
+- [ ] Azure
+- [ ] GCE
+ 
+ 
+#### Required By (mm/dd/yyyy):
 07/06/2017
 
 
-**Requested By (email addresses separated by commas):**
+#### Requested By (email addresses separated by commas):
 john_doe@evident.io
 
----
 
 #### Product Area:
 Suppressions
