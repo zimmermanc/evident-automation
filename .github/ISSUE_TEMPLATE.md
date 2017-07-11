@@ -18,7 +18,6 @@
  #### Cloud Provider:
 - [x] AWS
 - [ ] Azure
-- [ ] GCE
  
  
 #### Required By (mm/dd/yyyy):
@@ -29,7 +28,7 @@
 john_doe@evident.io
 
 
-#### Product Area:
+#### ESP Product Area:
 Suppressions
 
 
