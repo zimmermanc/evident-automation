@@ -37,6 +37,8 @@ Provide customers with a csv to audit the active suppressions configured in an E
 
 
 #### Use Case (What is the expected behavior?):
+The current control panel has limited ability to audit suppressions and the suppressed alert report only shows what alerts were actually suppressed at that point in time.  Over the life of an Organization in ESP, as suppressions are added and removed, accounts are added and removed, the ability to understand and audit what is suppressed for which accounts and teams is no longer usable in the data exposed via the web console.
+
 The need to audit suppressions includes, but is not limited to, the following questions:
 
 1. What external accounts have suppressions enabled, who did it, when, and what are those suppressions for?
