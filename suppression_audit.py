@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 #
+# PROVIDED AS IS WITH NO WARRANTY OR GUARANTEES
+# Copyright (c) 2017 Evident.io, Inc., All Rights Reserved
+#
 # Provide customers with a csv file to audit suppressions configured in an ESP organization.
 #
 # Requirements:
