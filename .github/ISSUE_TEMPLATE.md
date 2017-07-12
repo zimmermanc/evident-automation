@@ -15,21 +15,11 @@
 - [ ] Bug Report
 
 
-#### Requested By:
-
-john_doe@evident.io
- 
- 
-#### Required By (mm/dd/yyyy):
-
-07/07/2018
-
-
 #### Priority:
 
 - [ ] High
-- [ ] Medium
-- [x] Low
+- [x] Medium
+- [ ] Low
  
  
 #### Cloud Provider:
@@ -62,5 +52,5 @@ Code examples, error output, etc.
 
 #### Additional Comments:
 
-n/a
+[ For customer ABC... ]
 
