@@ -13,30 +13,43 @@
 - [x] New Project
 - [ ] Feature Enhancement
 - [ ] Bug Report
- 
- 
- #### Cloud Provider:
-- [x] AWS
-- [ ] Azure
- 
- 
-#### Required By (mm/dd/yyyy):
-07/06/2017
 
 
 #### Requested By:
+
 john_doe@evident.io
+ 
+ 
+#### Required By (mm/dd/yyyy):
+
+07/06/2017
+
+
+#### Priority:
+
+- [ ] High
+- [ ] Medium
+- [x] Low
+ 
+ 
+#### Cloud Provider:
+
+- [x] AWS
+- [ ] Azure
 
 
 #### ESP Product Area:
+
 Suppressions
 
 
 #### Description (If the current behavior is a bug, please provide the steps to reproduce):
+
 Provide customers with a csv to audit the active suppressions configured in an ESP organization.
 
 
 #### Use Case (What is the expected behavior?):
+
 The current control panel has limited ability to audit suppressions and the suppressed alert report only shows what alerts were actually suppressed at that point in time.  Over the life of an Organization in ESP, as suppressions are added and removed, accounts are added and removed, the ability to understand and audit what is suppressed for which accounts and teams is no longer usable in the data exposed via the web console.
 
 The need to audit suppressions includes, but is not limited to, the following questions:
@@ -48,6 +61,7 @@ The need to audit suppressions includes, but is not limited to, the following qu
 
 
 #### Technical Requirements:
+
 Suppressions are based on the following criteria:
 
 * external_accounts
@@ -59,8 +73,10 @@ Suppressions are based on the following criteria:
 
 
 #### Supporting Image / Examples:
+
 N/A
 
 
 #### Additional Comments:
+
 N/A
