@@ -52,5 +52,5 @@ Code examples, error output, etc.
 
 #### Additional Comments:
 
-[ For customer ABC... ]
+[ The customer would like XYZ... ]
 
