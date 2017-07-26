@@ -28,7 +28,9 @@
 #
 # Description:
 #
-# Disables one or more ESP signatures by name.  Signature names are supplied as arguments.
+# Disables one or more ESP signatures by name in all external accounts. Signature names are
+# supplied as arguments.
+#
 # Example: disable_esp_signatures.py -s 'Signature One' 'Signature Two' 'Signature Three' ...
 #
 # Requirements:
@@ -41,8 +43,7 @@
 #   export ESP_ACCESS_KEY_ID=<your_access_key>
 #   export ESP_SECRET_ACCESS_KEY=<your_secret_access_key>
 #
-# Options:
-#
+# You can exclude one or more external accounts by including them in an exclude list:
 acct_exclude_list = [ '1111', '2222' ]
 
 
