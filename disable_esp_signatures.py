@@ -188,7 +188,9 @@ def disable_signatures(ext_acct_ids, sig_names):
         for sig_id in sig_ids:
             data = '{"data": {"type": "disabled_signatures", "attributes": {"signature_id": %d}}}' % (sig_id)
             response = api_call(method, uri, data, timeout)
-            print(response)
+            response['signature_id'] = sig_id
+            response['account_id'] = acct
+            print(json.dumps(response, indent=4, sort_keys=True))
 
     return
 
