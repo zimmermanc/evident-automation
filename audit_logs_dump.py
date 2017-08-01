@@ -28,6 +28,9 @@
 #
 # Description:
 #
+# This script dumps an ESP audit report to a csv formatted file called,
+# "esp_audit_report_YYYYMMDDTHHMMSS.csv" in the same directory that the script is executed in.
+#
 # Requirements:
 #
 # * Python3 (Tested with version 3.6.1)
@@ -38,7 +41,7 @@
 #   export ESP_ACCESS_KEY_ID=<your_access_key>
 #   export ESP_SECRET_ACCESS_KEY=<your_secret_access_key>
 #
-# Options:
+# Set the number of log entries to search and report on:
 #
 no_of_pages = 5     # search 250 log enteries
 no_of_days  = 1     # return the last 24 hrs of activity
@@ -182,7 +185,7 @@ def create_csv_file(csv_file_name, report):
             pass
 
     if os.path.exists(csv_file_name) == True and os.stat(csv_file_name).st_size > 0:
-        result = 'Success: Created ESP csv suppressions report, ' + csv_file_name +'.'
+        result = 'Success: Created ESP csv audit report, ' + csv_file_name +'.'
     else:
         result = 'Error: Failed to create csv file, ' + csv_file_name +'.'
 
