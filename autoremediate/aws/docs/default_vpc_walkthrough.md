@@ -2,11 +2,6 @@
 
 This document walks through the steps to create an ESP custom signature, configure ESP SNS integration, and send alerts as events to Lambda for remediation.  The auto-remediation script used in this walkthrough attempts to delete the AWS default VPC from offending regions.
 
-:warning:  Deleting the default VPC is a permanent action. You must contact AWS Support if you want to create a new default VPC.
-
-:point_right: For more information, please see https://aws.amazon.com/premiumsupport/knowledge-center/deleted-default-vpc/
-
-
 
 #### Create ESP Custom Signature
 
