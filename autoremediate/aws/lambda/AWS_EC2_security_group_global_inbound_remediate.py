@@ -1,8 +1,33 @@
+## Copyright (c) 2013, 2014, 2015, 2016, 2017. Evident.io (Evident). All Rights Reserved. 
 ## 
-## Lambda function to automatically remediate Evident signatue: AWS:EC2 - security_group_global_inbound_port_check
+##   Evident.io shall retain all ownership of all right, title and interest in and to 
+##   the Licensed Software, Documentation, Source Code, Object Code, and API's ("Deliverables"), 
+##   including (a) all information and technology capable of general application to Evident.io's
+##   customers; and (b) any works created by Evident.io prior to its commencement of any
+##   Services for Customer.
+## 
+## Upon receipt of all fees, expenses and taxes due in respect of the relevant Services, 
+##   Evident.io grants the Customer a perpetual, royalty-free, non-transferable, license to 
+##   use, copy, configure and translate any Deliverable solely for internal business operations
+##   of the Customer as they relate to the Evident.io platform and products, and always
+##   subject to Evident.io's underlying intellectual property rights.
+## 
+## IN NO EVENT SHALL EVIDENT.IO BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, 
+##   INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF 
+##   THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF EVIDENT.IO HAS BEEN HAS BEEN
+##   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+## 
+## EVIDENT.IO SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+##   THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. 
+##   THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". 
+##   EVIDENT.IO HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
+##   OR MODIFICATIONS.
+## 
+## ---
+## 
+## Lambda function to automatically remediate Evident signatue:
 ##
-## PROVIDED AS IS WITH NO WARRANTY OR GUARANTEES
-## Copyright (c) 2016 Evident.io, Inc., All Rights Reserved
+## AWS:EC2 - security_group_global_inbound_port_check
 ##
 ## ---------------------------------------------------------------------------------
 ## Use lambda policy: ../policies/AWS_EC2_security_group_global_inbound_policy.json
@@ -49,7 +74,7 @@ def lambda_handler(event, context):
 
     try:
         sg_id = metadata['attributes']['data']['resource_id']
-    except Exception as e:
+    except:
         print('=> No security group to evaluate.')
     else:
         print ("=> Autoremediating security group " + sg_id, "in region " + region)
@@ -67,7 +92,7 @@ def auto_remediate(region, sg_id):
     for ip_perm in ip_perms:
         try:
             from_port   = ip_perm['FromPort']
-        except Exception as e:
+        except:
             continue
         else:
             to_port     = ip_perm['ToPort']
