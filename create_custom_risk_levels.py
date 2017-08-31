@@ -98,10 +98,10 @@ def call_api(action, url, data, count = 0):
             if int(error['status']) == 429:
                 if count < 5:
                     # Wait 60 seconds for every retry
-                    time.sleep(1 * (count + 1))
+                    time.sleep(60 * (count + 1))
                     count += 1
                     print("retry - %s" % count)
-                    call_api(action, url, data, count)
+                    return call_api(action, url, data, count)
                 else:
                     # Give-up after 5 retries
                     return false

@@ -10,12 +10,18 @@ import base64
 import cStringIO
 import hmac
 import time
+import csv
 
 #=== Description ===
-# Print the list of email addresses of users that the authenticated user has access to.
+# Export the list of users to a CSV file
 #
 # Instructions:
 # 1. Enter your ESP API Public Key and Secret Key
+# 2. Update CSV_FILENAME to the desired filename.
+#    Default: users.csv
+# 3. Update the list of user attributes to output
+#    Supported: id, created_at, email, time_zone, first_name, last_name, phone, mfa_enabled, disable_daily_emails, updated_at, role
+#    Default: first_name, last_name, email, role, created_at
 #
 # Limition:
 # - Have not tested with more than 100 users.
@@ -27,6 +33,12 @@ import time
 # ESP API Access Key Credentials
 public = <public key>
 secret = <secret key>
+
+# Output filename
+CSV_FILENAME = 'users.csv'
+
+# List of attributes
+attributes = ['first_name', 'last_name', 'email', 'role', 'created_at']
 
 #=== End Configuration ===
 
@@ -98,32 +110,65 @@ def call_api(action, url, data, count = 0):
     
     return ev_response_json
 
+# Get id from relationship link
+# Example: http://test.host/api/v2/signatures/1003.json
+# Should return 1003
+def get_id(link):
+    a = link.split("/")
+    b = a[len(a) - 1].split(".")
+    return int(b[0])
+
+# Retrieve list of role names
+def get_role_names():
+    role_names = {}
+    data = ''
+    page_num = 1
+    has_next = True
+    while has_next:
+        ev_create_url = '/api/v2/roles?page[number]=%d&page[size]=100' % page_num
+        ev_response_json = call_api('GET', ev_create_url, data)
+        if 'data' in ev_response_json:
+            for role in ev_response_json['data']:
+                role_names[str(role['id'])] = role['attributes']['name']
+
+        page_num += 1
+        has_next = ('next' in ev_response_json['links'])
+        
+    return role_names
+
 #=== End Helper Methods ===
 
 #=== Main Script ===
+# Retrieve list of role names
+role_names = get_role_names()
 
-# Retrieve list of Emails
-emails = []
+# Retrieve list of Users
+users = []
 data = ''
 page_num = 1
 has_next = True
 while has_next:
     ev_create_url = '/api/v2/users?page[number]=%d&page[size]=100' % page_num
     ev_response_json = call_api('GET', ev_create_url, data)
-    for user in ev_response_json['data']:
-        if 'email' in user['attributes']:
-            emails.append(user['attributes']['email'])
+    if 'data' in ev_response_json:
+        users += ev_response_json['data']
     
     page_num += 1
     has_next = ('next' in ev_response_json['links'])
     
-# Print E-mails
-email_str = ''
-for email in emails:
-    if email != '':
-        email_str += '%s, ' % email
+# Append roles attributes
+for user in users:
+    user['attributes']['role'] = role_names[str(get_id(user['relationships']['role']['links']['related']))]
     
-email_str = email_str[:-2]
-print(email_str)
+# Print Users to CSV
+with open(CSV_FILENAME, 'wb') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=attributes)
+    writer.writeheader()
+    
+    for user in users:
+        row = {}
+        for attribute in attributes:
+            row[attribute] = user['attributes'][attribute]
+        writer.writerow(row)
 
 #=== End Main Script ===
