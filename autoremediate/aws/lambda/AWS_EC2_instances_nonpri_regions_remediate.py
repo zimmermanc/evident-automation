@@ -71,7 +71,7 @@ def lambda_handler(event, context):
     except:
         print('=> No instances to evaluate.')
     else:
-        print ('=> Autoremediating instance ' + instance_id, 'in region ' + region)
+        print ('=> Autoremediating instance %s in region %s..' % (instance_id, region))
         results = auto_remediate(region, instance_id)
 
 
@@ -118,6 +118,7 @@ def kill_instance(ec2, instance_id, region):
         except Exception as e:
             print(e)
         else:
-            print(response['TerminatingInstances'])
+            print('=> Shutting down and terminating instance %s in region %s..' % (instance_id, region))
+            #print(json.dumps(response['TerminatingInstances']))
 
     return
