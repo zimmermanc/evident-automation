@@ -23,7 +23,7 @@ This document walks through the steps to create an ESP custom signature, configu
     * SNS Topic Name: **instances-non-pri-regions-topic**
     * Teams: Select the same team(s) as above in the Create Custom Signature step
     * Alert Types: Check **Fail** (Uncheck all others)
-    * Signatures: Select **Amazon Low Risk Signatures** and choose the custom signature we just created; "Instances in Non Priority Regions"
+    * Signatures: Select **Amazon Low Risk Signatures** and choose the custom signature we just created; *Instances in Non Priority Regions*
 
 
 #### Create IAM Policy and Role for Lambda
@@ -41,8 +41,8 @@ This document walks through the steps to create an ESP custom signature, configu
 1. From the IAM Dashboard, under Roles, select Create new role
 2. Select the AWS Lambda role type 
 3. Attach two policies:
-    * Check the policy we created above; instances-non-pri-regions-lambda
-    * Check the AWS managed policy; AWSLambdaBasicExecutionRole
+    * Check the policy we created above; *instances-non-pri-regions-lambda*
+    * Check the AWS managed policy; *AWSLambdaBasicExecutionRole*
 4. Select Next Step 
 5. Name the role: **instances-non-pri-regions-lambda** and select Create role
 
@@ -50,14 +50,14 @@ This document walks through the steps to create an ESP custom signature, configu
 #### Create Auto-Remediation Lambda Function
 
 1. From the AWS Lambda Dashboard, select Create a Lambda function
-2. Select the blueprint; **sns-message-python**
-3. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; instances-non-pri-regions-topic
+2. Select the blueprint; *sns-message-python*
+3. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *instances-non-pri-regions-topic*
 4. Check Enable trigger and select Next
 5. Name the function and give it a description (if desired)
 6. In the Lambda function code window, copy & paste the following auto-remediation script: https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/AWS_EC2_instances_nonpri_regions_remediate.py
-7. Under the Existing role drop-down menu, choose the Lambda Role we created above; instances-non-pri-regions-lambda
+7. Under the Existing role drop-down menu, choose the Lambda Role we created above; *instances-non-pri-regions-lambda*
 8. Toggle Advancing settings and enter the following:
-    * Set the timeout value to 5 minutes (the max)
+    * Set the timeout value to **5 minutes** (the max)
     * No VPC access is required
 9. Select Next and Create function
 
@@ -66,7 +66,7 @@ This document walks through the steps to create an ESP custom signature, configu
 
 1. Login to ESP
 2. On the top pane, select Control Panel, then Custom Signatures from the left-side column
-3. Locate the "Instances in Non Priority Regions" signature, select View and Activate
+3. Locate the *Instances in Non Priority Regions* signature, select View and Activate
 
 
 Check CloudWatch Logs for auto-remediation output.
