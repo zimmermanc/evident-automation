@@ -1,4 +1,4 @@
-### Instances Found In Non-Priority Regions Auto-Remediate Walkthrough
+### Instances In Non-Priority Regions Auto-Remediate Walkthrough
 
 This document walks through the steps to create an ESP custom signature, configure ESP SNS integration, and send alerts as events to Lambda for remediation.  The auto-remediation script used in this walkthrough identifies running/stopped instances in non-priority regions and attempts to; 1.) Create a backup image (AMI) of the EC2 instance and 2.) Terminate the instance.
 
@@ -70,4 +70,8 @@ This document walks through the steps to create an ESP custom signature, configu
 3. Locate the *Instances in Non Priority Regions* signature, select View and Activate
 
 
-Check CloudWatch Logs for auto-remediation output.
+#### Check CloudWatch Logs for Auto-Remediation Output
+
+1. From the AWS CloudWatch Dashboard, select Logs in the left pane
+2. Select the log group **/aws/lambda/<your_function_name>**
+3. Check the log streams for output and/or errors
