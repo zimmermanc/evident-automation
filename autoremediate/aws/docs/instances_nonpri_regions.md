@@ -70,7 +70,7 @@ This document walks through the steps to create an ESP custom signature, configu
 3. Locate the *Instances in Non Priority Regions* signature, select View and Activate
 
 
-#### Check CloudWatch Logs for Auto-Remediation Output
+#### Check CloudWatch Logs for Auto-Remediate Output
 
 1. From the AWS CloudWatch Dashboard, select Logs in the left pane
 2. Select the log group **/aws/lambda/<your_function_name>**
