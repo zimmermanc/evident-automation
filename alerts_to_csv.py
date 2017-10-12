@@ -22,10 +22,13 @@ import certifi
 # 2. (Optional) Enter which attributes you want to output. The attribute name can be anything from:
 # a. Alert (http://api-docs.evident.io/#attributes)
 # b. Signature (http://api-docs.evident.io/#attributes112)
+# c. External Account (http://api-docs.evident.io/?json#attributes66)
+# d. Region (http://api-docs.evident.io/?json#attributes85)
+# e. Service (http://api-docs.evident.io/?json#attributes108)
+# f. Suppression (http://api-docs.evident.io/?json#suppressions-attributes)
 # Note: See example for formatting
 # 3. (Optional) Modify the CSV parameters
-#
-# Note: Non-ASCII characters will be dropped from final output
+# 4. (Optional) Specify the specific External Accounts you want to export.
 #
 #=== End Description ===
 
@@ -36,11 +39,13 @@ import certifi
 public = <public key>
 secret = <secret key>
 
+# Export alerts for the following external accounts.  If none are specified, all external accounts will be exported.
+# Accounts you don't have access to will be omitted.
+# Example: EXTERNAL_ACCOUNT_IDS = ['1', '2']
+EXTERNAL_ACCOUNT_IDS = []
+
 # Alert attributes to output
 ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution' , 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
-
-# no data: metadata.data regions.code region.code suppression.id suppression.created_at suppression.reason
-# unicode error: signature.description signature.resolution
 
 # CSV file parameters
 DELIMITER = ','
@@ -135,7 +140,7 @@ def get_items(item_type):
     page_num = 1
     has_next = True
     while has_next:
-        ev_create_url = '/api/v2/%s?page[number]=%d&amp;amp;page[size]=100' % (item_type, page_num)
+        ev_create_url = '/api/v2/%s?page[number]=%d&page[size]=100' % (item_type, page_num)
         data = ''
         ev_response_json = call_api('GET', ev_create_url, data)
         if 'data' in ev_response_json:
@@ -159,19 +164,18 @@ def find_latest_alerts(external_account_id):
             has_next = True
             while has_next:
                 print(' Getting page %d' % page_num)
-                ev_create_url = '/api/v2/reports/%s/alerts.json?page[number]=%d&amp;amp;page[size]=100' % (report['id'], page_num)
+                ev_create_url = '/api/v2/reports/%s/alerts.json?page[number]=%d&page[size]=100' % (report['id'], page_num)
                 ev_response_json = call_api('GET', ev_create_url, data)
                 alerts += ev_response_json['data']
                 page_num += 1
                 has_next = ('next' in ev_response_json['links'])
-                break
                 
             # Retrieve suppressed alerts
             page_num = 1
             has_next = True
             while has_next:
                 print(' Getting page %d' % page_num)
-                ev_create_url = '/api/v2/reports/%s/alerts.json?page[number]=%d&amp;amp;page[size]=100&amp;amp;filter[suppressed]=true' % (report['id'], page_num)
+                ev_create_url = '/api/v2/reports/%s/alerts.json?page[number]=%d&page[size]=100&filter[suppressed]=true' % (report['id'], page_num)
                 ev_response_json = call_api('GET', ev_create_url, data)
                 alerts += ev_response_json['data']
                 page_num += 1
@@ -200,11 +204,12 @@ def get_all_alerts():
     has_next = True
     while has_next:
         data = ''
-        ev_create_url = '/api/v2/external_accounts?page[number]=%d&amp;amp;page[size]=100' % page_num
+        ev_create_url = '/api/v2/external_accounts?page[number]=%d&page[size]=100' % page_num
         ev_response_json = call_api('GET', ev_create_url, data)
         for external_account in ev_response_json['data']:
-            print('Retrieving alerts for %s' % external_account['id'])
-            latest_alerts += find_latest_alerts(external_account['id'])
+            if not EXTERNAL_ACCOUNT_IDS or external_account['id'] in EXTERNAL_ACCOUNT_IDS:
+                print('Retrieving alerts for %s' % external_account['id'])
+                latest_alerts += find_latest_alerts(external_account['id'])
         page_num += 1
         has_next = ('next' in ev_response_json['links'])
         ev_response_json = call_api('GET', ev_create_url, data)
