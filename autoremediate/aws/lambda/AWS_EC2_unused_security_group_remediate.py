@@ -26,11 +26,10 @@
 # ---
 # 
 # Lambda function to automatically remediate Evident signatue:
-#
-# AWS:EC2-031 Unused Security Groups
+# * AWS:EC2-031 Unused Security Groups
 #
 # ---------------------------------------------------------------------------------
-# Use lambda policy: ../policies/<NEED>
+# Use lambda policy: ../policies/AWS_EC2_unused_security_group_policy.json
 # ---------------------------------------------------------------------------------
 #
 
@@ -69,6 +68,7 @@ def lambda_handler(event, context):
 
     try:
         sg_id = metadata['attributes']['data']['details']['securityGroup']['groupId']
+        #sg_id = metadata['attributes']['data']['resource_id']
     except:
         print("=> No security group to evaluate.")
     else:
@@ -80,10 +80,14 @@ def lambda_handler(event, context):
 
 def auto_remediate(region, sg_id):
     """
-    Auto-Remediate - Removes unused security groups
+    Auto-Remediate - Delete unused security groups
     """
 
     ec2 = boto3.client('ec2', region_name=region)
+
+    lambda_check = lambda_sg(region, sg_id)
+    if lambda_check != 'false':
+        return "=> Security group, {} is tied to a Lambda function. Skipping..".format(sg_id)
 
     try:
         ec2.delete_security_group(GroupId=sg_id)
@@ -95,14 +99,17 @@ def auto_remediate(region, sg_id):
     return results
 
 
-def lambda_check(region, sg_id):
+def lambda_sg(region, sg_id):
+    """
+    Check - Security group tied to a Lambda function?
+    """
 
     lam = boto3.client('lambda', region_name=region)
 
-    lambda_group = 'false'
+    lambda_check = 'false'
     for func in lam.list_functions()['Functions']:
-        if lambda_group = 'true':
-            return lambda_group
+        if lambda_check == 'true':
+            return lambda_check
         try:
             vpc_config = func['VpcConfig']
         except:
@@ -111,6 +118,6 @@ def lambda_check(region, sg_id):
             security_groups = vpc_config['SecurityGroupIds']
             for sg in security_groups:
                 if sg == sg_id:
-                    lambda_group = 'true'
+                    lambda_check = 'true'
 
-    return lambda_group
+    return lambda_check
