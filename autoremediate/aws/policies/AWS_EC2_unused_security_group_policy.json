@@ -1,0 +1,17 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1507759700000",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DeleteSecurityGroup",
+                "ec2:DescribeSecurityGroups",
+                "lambda:ListFunctions"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
