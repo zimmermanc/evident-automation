@@ -42,7 +42,7 @@ secret = <secret key>
 # Export alerts for the following external accounts.  If none are specified, all external accounts will be exported.
 # Accounts you don't have access to will be omitted.
 # Example: EXTERNAL_ACCOUNT_IDS = ['1', '2']
-EXTERNAL_ACCOUNT_IDS = []
+EXTERNAL_ACCOUNT_IDS = ['8600']
 
 # Alert attributes to output
 ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution' , 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
@@ -264,7 +264,7 @@ def get_output():
             elif att_type == 'alert' and attribute in alert['attributes'] and alert['attributes'][attribute] is not None:
                 output += alert['attributes'][attribute]
             elif att_type == 'signature' and attribute in signature['attributes'] and signature['attributes'][attribute] is not None:
-                output += signature['attributes'][attribute].encode('ascii',errors='ignore')
+                output += signature['attributes'][attribute].encode('ascii',errors='ignore').replace('\\"', '""')
             elif att_type == 'region' and attribute in region['attributes'] and region['attributes'][attribute] is not None:
                 output += region['attributes'][attribute]
             elif att_type == 'service' and service is not None and attribute in service['attributes'] and service['attributes'][attribute] is not None:
@@ -272,7 +272,7 @@ def get_output():
             elif att_type == 'external_account' and attribute in external_account['attributes'] and external_account['attributes'][attribute] is not None:
                 output += external_account['attributes'][attribute]
             elif att_type == 'suppression' and suppression is not None and attribute in suppression['attributes'] and suppression['attributes'][attribute] is not None:
-                output += suppression['attributes'][attribute]
+                output += suppression['attributes'][attribute].encode('ascii',errors='ignore').replace('\\"', '""')
                 
             output += DELIMITER
         output = output[:(len(output) - 1)] + '\n'
