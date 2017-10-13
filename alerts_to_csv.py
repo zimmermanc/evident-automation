@@ -15,7 +15,7 @@ import time
 import certifi
 
 #=== Description ===
-# Version 1.2
+# Version 1.3
 #
 # Output the latest alerts into a CSV file.
 #
@@ -28,6 +28,9 @@ import certifi
 # d. Region (http://api-docs.evident.io/?json#attributes85)
 # e. Service (http://api-docs.evident.io/?json#attributes108)
 # f. Suppression (http://api-docs.evident.io/?json#suppressions-attributes)
+# g. Metadata (http://api-docs.evident.io/#attributes75)
+#  WARNING: Metadata retrieval will require an API call per alert, meaning this would substantially increase
+#           the amount of time required for the script to run. 
 # Note: See example for formatting
 # 3. (Optional) Modify the CSV parameters
 # 4. (Optional) Specify the specific External Accounts you want to export.
@@ -47,7 +50,7 @@ secret = <secret key>
 EXTERNAL_ACCOUNT_IDS = []
 
 # Alert attributes to output
-ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution' , 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
+ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution', 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
 
 # CSV file parameters
 DELIMITER = ','
@@ -154,6 +157,16 @@ def get_items(item_type):
         ev_response_json = call_api('GET', ev_create_url, data)
     return items
 
+# Retrieve alert metadata
+def get_metadata(alert_id):
+    ev_create_url = '/api/v2/alerts/%s/metadata' % alert_id
+    data = ''
+    ev_response_json = call_api('GET', ev_create_url, data)
+    if 'data' in ev_response_json:
+        item = ev_response_json['data']
+        item['attributes']['id'] = item['id']
+        return item
+
 # Retrieve latest alerts for given external account ID
 def find_latest_alerts(external_account_id):
     data = ''
@@ -244,7 +257,9 @@ def get_output():
         output += attribute + ','
     output = output[:(len(output) - 1)] + '\n'
 
-    for alert in latest_alerts:    
+    for alert in latest_alerts: 
+        metadata = None
+        
         if is_standard_sig(alert):
             signature = signatures[get_signature_id(alert)]
             service = services[get_id(signature['relationships']['service']['links']['related'])]
@@ -276,13 +291,20 @@ def get_output():
                 value = external_account['attributes'][attribute]
             elif att_type == 'suppression' and suppression is not None and attribute in suppression['attributes'] and suppression['attributes'][attribute] is not None:
                 value = suppression['attributes'][attribute]
+            elif att_type == 'metadata':
+                if metadata is None:
+                    metadata = get_metadata(alert['id'])
+                if attribute == 'data':
+                    value = json.dumps(metadata['attributes'][attribute])
+                else:
+                    value = metadata['attributes'][attribute]
             
             # Remove non-ASCII symbols
             # Surround values with , in double quotes if it doesn't have that already
             # Escape any double quotes
             value = value.encode('ascii',errors='ignore')
             if ',' in value and value[:1] != '"':
-                value = '"' + signature['attributes'][attribute].encode('ascii',errors='ignore').replace('"', '""') + '"'
+                value = '"' + value.encode('ascii',errors='ignore').replace('"', '""') + '"'
             else:
                 value = value.replace('\\"', '""')
             output += value + DELIMITER
