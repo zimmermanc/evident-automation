@@ -15,7 +15,7 @@ import time
 import certifi
 
 #=== Description ===
-# Version 1.4
+# Version 1.5
 #
 # Output the latest alerts into a CSV file.
 #
@@ -37,6 +37,7 @@ import certifi
 # Note: See example for formatting
 # 3. (Optional) Modify the CSV parameters
 # 4. (Optional) Specify the specific External Accounts you want to export.
+# 5. (Optional) Specify the specific alert statuses that you want to export.
 #
 #=== End Description ===
 
@@ -51,6 +52,10 @@ secret = <secret key>
 # Accounts you don't have access to will be omitted.
 # Example: EXTERNAL_ACCOUNT_IDS = ['1', '2']
 EXTERNAL_ACCOUNT_IDS = []
+
+# Alert status to query for.  If none are specified, alerts of all status will be exported.
+# Valid values: 'info', 'pass', 'fail', 'warn', 'error'
+STATUS = ['warn', 'fail']
 
 # Alert attributes to output
 ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'organization.name', 'sub_organization.name', 'team.name', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution', 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
@@ -174,6 +179,7 @@ def get_metadata(alert_id):
 def find_latest_alerts(external_account_id):
     data = ''
     ev_create_url = '/api/v2/reports?filter[external_account_id_eq]=%s' % external_account_id
+    
     ev_response_json = call_api('GET', ev_create_url, data)
     for report in ev_response_json['data']:
         if 'status' in report['attributes'] and report['attributes']['status'] == 'complete':
@@ -183,6 +189,9 @@ def find_latest_alerts(external_account_id):
             while has_next:
                 print(' Getting page %d' % page_num)
                 ev_create_url = '/api/v2/reports/%s/alerts.json?page[number]=%d&page[size]=100' % (report['id'], page_num)
+                for status in STATUS:
+                    ev_create_url += '&filter[status_in][]=%s' % status
+                
                 ev_response_json = call_api('GET', ev_create_url, data)
                 alerts += ev_response_json['data']
                 page_num += 1
