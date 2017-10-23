@@ -15,7 +15,7 @@ import time
 import certifi
 
 #=== Description ===
-# Version 1.3
+# Version 1.4
 #
 # Output the latest alerts into a CSV file.
 #
@@ -25,10 +25,13 @@ import certifi
 # a. Alert (http://api-docs.evident.io/#attributes)
 # b. Signature (http://api-docs.evident.io/#attributes112)
 # c. External Account (http://api-docs.evident.io/?json#attributes66)
-# d. Region (http://api-docs.evident.io/?json#attributes85)
-# e. Service (http://api-docs.evident.io/?json#attributes108)
-# f. Suppression (http://api-docs.evident.io/?json#suppressions-attributes)
-# g. Metadata (http://api-docs.evident.io/#attributes75)
+# d. Team (http://api-docs.evident.io/?json#attributes170)
+# e. Sub-organization (http://api-docs.evident.io/?json#attributes147)
+# f. Organization (http://api-docs.evident.io/?json#attributes79)
+# g. Region (http://api-docs.evident.io/?json#attributes85)
+# h. Service (http://api-docs.evident.io/?json#attributes108)
+# i. Suppression (http://api-docs.evident.io/?json#suppressions-attributes)
+# j. Metadata (http://api-docs.evident.io/#attributes75)
 #  WARNING: Metadata retrieval will require an API call per alert, meaning this would substantially increase
 #           the amount of time required for the script to run. 
 # Note: See example for formatting
@@ -50,7 +53,7 @@ secret = <secret key>
 EXTERNAL_ACCOUNT_IDS = []
 
 # Alert attributes to output
-ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution', 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
+ATTRIBUTES = ['alert.id', 'alert.created_at', 'alert.ended_at', 'signature.name', 'alert.status', 'region.code', 'organization.name', 'sub_organization.name', 'team.name', 'external_account.name', 'signature.identifier', 'alert.risk_level', 'service.name', 'signature.description', 'signature.resolution', 'suppression.id', 'suppression.created_at', 'suppression.reason', 'alert.resource'  ]
 
 # CSV file parameters
 DELIMITER = ','
@@ -246,6 +249,15 @@ def get_output():
     print('Retrieving external accounts')
     external_accounts = get_items('external_accounts')
     
+    print('Retrieving organizations')
+    organizations = get_items('organizations')
+    
+    print('Retrieving sub-organizations')
+    sub_organizations = get_items('sub_organizations')
+    
+    print('Retrieving teams')
+    teams = get_items('teams')
+    
     print('Retrieving suppressions')
     suppressions = get_items('suppressions')
     
@@ -289,6 +301,18 @@ def get_output():
                 value = service['attributes'][attribute]
             elif att_type == 'external_account' and attribute in external_account['attributes'] and external_account['attributes'][attribute] is not None:
                 value = external_account['attributes'][attribute]
+            elif att_type == 'organization' and attribute in external_account['attributes'] and external_account['attributes'][attribute] is not None:
+                organization_id = get_id(external_account['relationships']['organization']['links']['related'])
+                organization = organizations[organization_id]
+                value = organization['attributes'][attribute]
+            elif att_type == 'sub_organization' and attribute in external_account['attributes'] and external_account['attributes'][attribute] is not None:
+                sub_organization_id = get_id(external_account['relationships']['sub_organization']['links']['related'])
+                sub_organization = sub_organizations[sub_organization_id]
+                value = sub_organization['attributes'][attribute]
+            elif att_type == 'team' and attribute in external_account['attributes'] and external_account['attributes'][attribute] is not None:
+                team_id = get_id(external_account['relationships']['team']['links']['related'])
+                team = teams[team_id]
+                value = team['attributes'][attribute]
             elif att_type == 'suppression' and suppression is not None and attribute in suppression['attributes'] and suppression['attributes'][attribute] is not None:
                 value = suppression['attributes'][attribute]
             elif att_type == 'metadata':
