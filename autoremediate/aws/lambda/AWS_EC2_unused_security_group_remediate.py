@@ -42,9 +42,19 @@ import boto3
 print('=> Loading function')
 
 def lambda_handler(event, context):
-    message = event['Records'][0]['Sns']['Message']
+    try:
+        message = event['Records'][0]['Sns']['Message']
+    except KeyError:
+        try:
+            message = event['Records'][0]['Sns']
+        except KeyError:
+            print('=> KeyError: No SNS key found.')
+            return
+        else:
+            alert = message
+    else:
+        alert = json.loads(message)
 
-    alert = json.loads(message)
     status = alert['data']['attributes']['status']
 
     # If the signature didn't report a failure, exit..
