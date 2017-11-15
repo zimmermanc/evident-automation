@@ -19,7 +19,9 @@
 7. Edit onboard_azure_account.py options
 8. Run the onboarding script
 
-### Scenarios
+---
+
+## Scenarios
 
 #### Terminology
 
@@ -127,6 +129,7 @@ options = {
 }
 ```
 
+---
 
 ## Onboarding Steps
 
