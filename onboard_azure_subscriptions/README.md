@@ -4,9 +4,9 @@
 
 #### Scenarios
 
-* [Onboarding master or standalone subscription (no existing activity log export)](#Onboarding master or standalone subscription (no existing activity log export))
-* [Onboarding master or standalone subscription (existing activity log export)](#Onboarding master or standalone subscription (existing activity log export))
-* [Onboarding slave subscription](#Onboarding slave subscription)
+* Onboarding master or standalone subscription (no existing activity log export)
+* Onboarding master or standalone subscription (existing activity log export)
+* Onboarding slave subscription
 
 #### Onboarding Steps
 
@@ -28,7 +28,6 @@
 * **Master**: The first subscription that you want to onboard to ESP. Typically, you set this subscription as a designated location for Activity log export for the rest of your subscriptions
 * **Slave/additional subscription**: This subscription typically exports its activity log to the master subscription.
 
-<a name="Onboarding master or standalone subscription (no existing activity log export"/>
 ### Onboarding master or standalone subscription (no existing activity log export)
 
 In this scenario, you have one Azure subscription that you want to onboard, either as master or standalone ESP account. The onboarding script will create a log profile and a storage account to store your activity log.
