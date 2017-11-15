@@ -4,9 +4,9 @@
 
 #### Scenarios
 
-* [Onboarding master or standalone subscription (no existing activity log export)][Onboarding master or standalone subscription (no existing activity log export)]
-* [Onboarding master or standalone subscription (existing activity log export)][Onboarding master or standalone subscription (existing activity log export)]
-* [Onboarding slave subscription][Onboarding slave subscription]
+* [Onboarding master or standalone subscription (no existing activity log export)](#Onboarding master or standalone subscription (no existing activity log export))
+* [Onboarding master or standalone subscription (existing activity log export)](#Onboarding master or standalone subscription (existing activity log export))
+* [Onboarding slave subscription](#Onboarding slave subscription)
 
 #### Onboarding Steps
 
