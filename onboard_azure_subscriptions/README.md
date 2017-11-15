@@ -127,9 +127,10 @@ options = {
 }
 ```
 
+
 ## Onboarding Steps
 
-__**Step 1: Download the script and resources directory**__
+### Step 1: Download the script and resources directory
 
 Please download the directory located in the Evident automation repository here:
 [onboard_azure_subscriptions](https://github.com/EvidentSecurity/automation/tree/master/onboard_azure_subscriptions)
@@ -137,14 +138,14 @@ Please download the directory located in the Evident automation repository here:
 Inside the folder you should see esp-trigger.zip , onboard_azure_account.py, requirements.txt
 
 
-__**Step 2: Install the required python libraries**__
+### Step 2: Install the required python libraries
 
 ```
 pip install -r requirements.txt
 ```
 
 
-__**Step 3: Login to Azure cli**__
+### Step 3: Login to Azure cli
 
 Install Azure CLI (if not yet installed)
 [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
@@ -155,7 +156,7 @@ az login
 ```
 
 
-__**Step 4: Create a temporary Service Principal*__
+### Step 4: Create a temporary Service Principal
 
 This step is only valid if you are onboarding **master** or **standalone** subscription to ESP. *Skip this step is you are onboarding additional subscriptions/ESP accounts and still have **ESPtemponboarding** SP from the previous onboarding.*
 
@@ -168,7 +169,7 @@ az ad sp create-for-rbac -n "ESPtemponboarding" --role contributor --scopes /sub
 **Please save the service principal details. You can re-use this temporary SP to onboard additional subscriptions.**
 
 
-__**Step 5: Grant ESPtemponboarding App permissions to Azure AD**__
+### Step 5: Grant ESPtemponboarding App permissions to Azure AD
 
 The onboarding script is going to create a permanent ESP Service principal. In order to do so, **ESPtemponboarding** needs to be given access to create/write App.
 
@@ -181,8 +182,6 @@ The onboarding script is going to create a permanent ESP Service principal. In o
 - [x] Read and write all applications
 - [x] Read all users' full profile
 6. Click on **Select** button, then click on **Done** button
-
-
 7. Select **Microsoft Graph**
 8. Click on **Select** Button
 9. Check the following permissions:
@@ -191,12 +190,12 @@ The onboarding script is going to create a permanent ESP Service principal. In o
 11. Once you have added both AAD and Graph permission, select **Grant Permission** and hit **Yes**
 
 
-__**Step 6: Get ESP team ID and credential**__
+### Step 6: Get ESP team ID and credential
 
-##### TEAM ID
+#### TEAM ID
 You can go to https://esp.evident.io/control_panel/teams and select edit. The team ID is included in the url
 
-##### API KEY
+#### API KEY
 ```
 export ESP_ACCESS_KEY_ID='your_esp_access_key_id'
 export ESP_SECRET_ACCESS_KEY='your_esp_secret_access_key'
@@ -209,12 +208,12 @@ esp_secret_key = os.environ["ESP_SECRET_ACCESS_KEY"]
 ```
 
 
-__**Step 7: Edit onboard_azure_account.py options**__
+### Step 7: Edit onboard_azure_account.py options
 
 See **Scenarios** section for sample config
 
 
-__**Step 8: Run the onboarding script**__
+### Step 8: Run the onboarding script
 
 By default, the script runs in dry-run state. We recommend that you run the dry mode first before running the actual onboarding.
 
