@@ -181,7 +181,7 @@ The onboarding script is going to create a permanent ESP Service principal. In o
 3. Select **Windows Azure Active Directory**
 4. Click on **Select** Button
 5. Check the following permissions:
-- [x] Read and write directory data
+- [x] Read directory data
 - [x] Read and write all applications
 - [x] Read all users' full profile
 6. Click on **Select** button, then click on **Done** button
