@@ -37,55 +37,69 @@ require 'cgi'
 require 'openssl'
 
 config = ESP::Configuration.new
+
 # ESP API Keys
 config.access_key_id = ''
 config.secret_access_key = ''
+
 # Account_id
 account_id = ''
+# Date Range
+before_date = '2017-12-05'
+after_date = '2017-12-07'
+# Alert properties
+status = 'fail'
+risk_level = 'high'
 
 # Declare APIs
 reports_api = ESP::ReportsApi.new
 alerts_api = ESP::AlertsApi.new
-opts = {}
 
 def get_alert_count_for_report_total(alerts)
   total_pages = alerts.last_page_number
+  if total_pages == nil
+  	total_pages = 1
+  end
   alerts.last_page!
   total = ((total_pages.to_i - 1) * 20) + alerts.size.to_i
   return total
 end
 
-# Get latest report and high risk alert count
-opts['filter'] =  { 
-  external_account_eq: account_id.to_s
+# Get after report and high risk alert count
+opts = {}
+opts[:filter] =  { 
+  external_account_id_eq: account_id.to_s,
+  created_at_lt: after_date
 }
+opts[:filter] = {}
 current_report = reports_api.list(opts)[0]
 opts[:filter] = {
-  status_eq: 'fail',
-  risk_level_eq: 'high'
+  status_eq: status,
+  risk_level_eq: risk_level
 }
 current_alerts = alerts_api.list_for_report(current_report.id, opts)
-current_high_risk_alert_count = get_alert_count_for_report_total(current_alerts)
+current_alert_count = get_alert_count_for_report_total(current_alerts)
 
-# Get prior report and high risk alert count 
+# Get before report and high risk alert count 
 opts[:filter] = {}
-date = Date.today - 5
 opts[:filter] =  { 
-  created_at_lt: date
+  external_account_id_eq: account_id.to_s,
+  created_at_lt: before_date
 }
+opts[:filter] = {}
 prior_report = reports_api.list(opts)[0]
 opts[:filter] = {
-  status_eq: 'fail',
-  risk_level_eq: 'high'
+  status_eq: status,
+  risk_level_eq: risk_level
 }
 prior_alerts = alerts_api.list_for_report(prior_report.id, opts)
-prior_high_risk_alert_count = get_alert_count_for_report_total(prior_alerts)
+prior_alert_count = get_alert_count_for_report_total(prior_alerts)
 
 # Calculate difference
-alert_count_change = current_high_risk_alert_count - prior_high_risk_alert_count
-puts 'Current high risk alert count:'
-puts current_high_risk_alert_count
-puts 'Prior high risk alert count:'
-puts prior_high_risk_alert_count
+alert_count_change = current_alert_count - prior_alert_count
+puts 'Before alert count:'
+puts prior_alert_count
+puts 'After alert count:'
+puts current_alert_count
 puts 'Difference:'
 puts alert_count_change
