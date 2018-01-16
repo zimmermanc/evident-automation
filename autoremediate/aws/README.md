@@ -10,6 +10,7 @@ Directory | Contents
 --------- | ---------
 lambda    | Auto-Remediation Lambda functions
 policies  | IAM Role policies with the necessary permissions to run the corresponding Lambda function
+cfn       | CloudFormation templates
 
 ## How it Works...
 
