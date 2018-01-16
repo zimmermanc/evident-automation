@@ -4,8 +4,8 @@
 
 Automate the creation of the necessary resources to satify the CIS 3.x Foundations Benchmark monitoring section.
 
----
-[AWS CIS Foundations Benchmark](https://d0.awsstatic.com/whitepapers/compliance/AWS_CIS_Foundations_Benchmark.pdf)
+* [AWS CIS Foundations Benchmark](https://d0.awsstatic.com/whitepapers/compliance/AWS_CIS_Foundations_Benchmark.pdf)
+
 ---
 
 This CloudFormation template creates resources to remediate the following CIS Foundations Benchmark requirements:
