@@ -31,4 +31,5 @@ This CloudFormation template creates resources to remediate the following CIS Fo
 - [x] 3.12 Ensure a log metric filter and alarm exist for changes to network gateways (Scored)
 - [x] 3.13 Ensure a log metric filter and alarm exist for route table changes (Scored)
 - [x] 3.14 Ensure a log metric filter and alarm exist for VPC changes (Scored)
+- [ ] 3.15 Ensure appropriate subscribers to each SNS topic (Not Scored)
 
