@@ -1,8 +1,8 @@
-# AWS CIS 3.x Foundations Benchmark v1.1.0 11-09-2016 remediation template
+# AWS CIS Foundations Benchmark v1.1.0 11-09-2016 remediation template
 
 ### Purpose
 
-Automate the creation of the necessary resources to satify the CIS 3.x Foundations Benchmark monitoring section.
+Automate the creation of the necessary resources to satify the CIS Foundations Benchmark monitoring (3.x) section.
 
 * [AWS CIS Foundations Benchmark](https://d0.awsstatic.com/whitepapers/compliance/AWS_CIS_Foundations_Benchmark.pdf)
 
