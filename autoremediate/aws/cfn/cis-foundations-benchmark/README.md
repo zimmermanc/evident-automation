@@ -41,7 +41,7 @@ This CloudFormation template creates resources to remediate the following CIS Fo
 
 1. Download and save this template to a local file.
 2. Login to your AWS account and navigate to the CloudFormation Dashboard.
-3. From the **Select Template** page, select *Choose File* and this template from your local download location. Click *Open* in the pop-up window then *Next*.
+3. From the **Select Template** page, select *Choose File* and this template from your local download location. Click *Open* in the pop-up window, then *Next*.
 4. Enter a *Stack name* on the **Specify Details** page.
    1. Be sure and change the *Email* address! This is where CIS alarm notifications will be sent.
    2. Enter a name for *TrailLogGroupName*, or leave the default.
