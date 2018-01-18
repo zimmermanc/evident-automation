@@ -147,36 +147,33 @@ for external_account_id in external_account_ids:
     # Retrieve list of Signature Custom Risk Levels
     scrl_list = []
     for x in xrange(NUM_OF_SIGS):
-        ev_create_url = '/api/v2/external_accounts/%s/signature_custom_risk_levels?page[number]=%d&page[size]=100' % (external_account_id, (x+1))
+        ev_create_url = '/api/v2/external_accounts/%d/signature_custom_risk_levels?page[number]=%d&page[size]=100' % (external_account_id, (x+1))
         data = ''
         ev_response_json = call_api('GET', ev_create_url, data)
         if 'data' in ev_response_json:
             scrl_list += ev_response_json['data']
 
     # Generate hash of Signature ID to Signature Custom Risk Level ID pair
-    sig_id_to_scrl_id = {}
+    sig_ids = []
     for scrl in scrl_list:
-        signature_id = get_id(scrl['relationships']['signature']['links']['related'])
-        sig_id_to_scrl_id[signature_id] = scrl['id']
+        if scrl['attributes']['custom_risk_level'] is not None:
+            sig_ids.append(int(scrl['id']))
 
     # Iterate for each Signature Identifier to Risk Level pair
     for identifier in identifier_to_risk_levels:
-        # Construct body
-        data = json.dumps({
-            'data': {
-                'type': 'signature_custom_risk_levels',
-                'attributes': { 
-                    'external_account_id': external_account_id,
-                    'signature_id': identifier_to_sig_id[identifier], 
-                    'risk_level': identifier_to_risk_levels[identifier]
-                }
-            }
-        })
-
         # Custom Risk Level already set, need to update
         sig_id = identifier_to_sig_id[identifier]
-        if sig_id in sig_id_to_scrl_id:
-            ev_create_url = '/api/v2/signature_custom_risk_levels/%s' % sig_id_to_scrl_id[sig_id]
+        if sig_id in sig_ids:
+            # Construct body
+            data = json.dumps({
+                'data': {
+                    'type': 'signature_custom_risk_levels',
+                    'attributes': { 
+                        'risk_level': identifier_to_risk_levels[identifier]
+                    }
+                }
+            })
+            ev_create_url = '/api/v2/external_accounts/%d/signature_custom_risk_levels/%d' % (external_account_id, sig_id)
             ev_response_json = call_api('PATCH', ev_create_url, data)
             if 'data' in ev_response_json:
                 print('update custom risk level: %s to %s' % (identifier, identifier_to_risk_levels[identifier]))
@@ -185,7 +182,17 @@ for external_account_id in external_account_ids:
                 print('failed to update custom risk level: %s to %s' % (identifier, identifier_to_risk_levels[identifier]))
         # Custom Risk Level doesn't exist, need to create
         else:
-            ev_create_url = '/api/v2/signature_custom_risk_levels'
+            # Construct body
+            data = json.dumps({
+                'data': {
+                    'type': 'signature_custom_risk_levels',
+                    'attributes': {
+                        'signature_id': identifier_to_sig_id[identifier],
+                        'risk_level': identifier_to_risk_levels[identifier]
+                    }
+                }
+            })
+            ev_create_url = '/api/v2/external_accounts/%d/signature_custom_risk_levels' % external_account_id
             ev_response_json = call_api('POST', ev_create_url, data)
             if 'data' in ev_response_json:
                 print('create custom risk level: %s to %s' % (identifier, identifier_to_risk_levels[identifier]))
