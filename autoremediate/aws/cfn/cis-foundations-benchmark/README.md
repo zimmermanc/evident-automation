@@ -50,3 +50,4 @@ This CloudFormation template creates resources to remediate the following CIS Fo
 6. On the **Review** page, under **Capabilities**, check "I acknowledge that AWS CloudFormation might create IAM resources with custom names."
 7. Click *Create* at the bottom of the **Review** page to launch the stack.
 
+On the CloudFormation Dashboard, click on the **Events** tab to follow your Stacks progress.
