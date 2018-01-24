@@ -33,7 +33,7 @@ This document walks through the steps to create an ESP custom signature, configu
 1. From the AWS Console, IAM Dashboard, under Policies, select Create Policy
 2. Select Create Your Own Policy
 3. Name the policy: **default-vpc-lambda**
-4. In the Policy Document, copy & paste the policy from the following link: [AWS_EC2_default_vpc_policy.json](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/policies/AWS_EC2_default_vpc_policy.json)
+4. In the Policy Document, copy & paste the policy from the following link: [AWS_EC2_default_vpc_policy.json](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_policy.json)
 5. Select Create Policy
 
 ###### Lambda IAM Role
@@ -54,7 +54,7 @@ This document walks through the steps to create an ESP custom signature, configu
 3. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *default-vpc-topic*
 4. Check Enable trigger and select Next
 5. Name the function and give it a description (if desired)
-6. In the Lambda function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/AWS_EC2_default_vpc_remediate.py)
+6. In the Lambda function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
 7. Under the Existing role drop-down menu, choose the Lambda Role we created above; *default-vpc-lambda*
 8. Toggle Advancing settings and enter the following:
     * Set the timeout value to 1 minute, 30 seconds
