@@ -79,17 +79,31 @@ This document walks through the steps to create an ESP custom signature, configu
 
 #### Create Auto-Remediation Lambda Function
 
-1. From the AWS Lambda Dashboard, select Create a Lambda function
-2. Select the blueprint; *sns-message-python*
-3. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *default-vpc-topic*
-4. Check Enable trigger and select Next
-5. Name the function and give it a description (if desired)
-6. In the Lambda function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
-7. Under the Existing role drop-down menu, choose the Lambda Role we created above; *default-vpc-lambda*
-8. Toggle Advancing settings and enter the following:
+1. From the AWS Lambda Dashboard, select Create function
+2. Select Blueprints and the blueprint; *sns-message-python*
+3. Select Configure
+
+![AWS IAM Policy](../../../images/aws_lambda1.jpg)
+
+4. Name your function
+5. Choose an existing role
+6. Select the Lambda Role we created above; *default-vpc-lambda*
+7. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *default-vpc-topic*
+8. Check Enable trigger and select Next
+
+![AWS IAM Policy](../../../images/aws_lambda2.jpg)
+
+9. In the Lambda function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
+
+![AWS IAM Policy](../../../images/aws_lambda3a.jpg)
+
+10. Under Execution role
+    * Double check your Existing role (refer to step 6)
+11. Under Basic settings and enter the following:
     * Set the timeout value to 1 minute, 30 seconds
-    * No VPC access is required
-9. Select Next and Create function
+12. Select Save
+
+![AWS IAM Policy](../../../images/aws_lambda3b.jpg)
 
 ---
 
