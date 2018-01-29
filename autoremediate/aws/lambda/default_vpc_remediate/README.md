@@ -7,14 +7,22 @@ This document walks through the steps to create an ESP custom signature, configu
 
 1. Login to ESP
 2. On the top pane, select Control Panel, then Custom Signatures from the left-side column
+
+![ESP Custom Signature](../../../autoremediate/images/esp_custom_sig1.jpg)
+
 3. Create a New signature
     * Name: **Remove Default VPC**
     * Risk Level: **Low**
     * Identifier: **AWS::VPC::???**
     * Description: "Attempts to delete the AWS default VPC from offending regions."
-    * Select a Team (or Teams) and Submit
+    * Select an External Account (or Accounts) and Submit
+
+![ESP Custom Signature](../../../autoremediate/images/esp_custom_sig2.jpg)
+
     * Copy & paste the code from the following link: [AWS_EC2 - default_vpc_check.rb](https://github.com/EvidentSecurity/custom_signatures/blob/master/AWS_EC2%20-%20default_vpc_check.rb)
 4. Save your signature, but don't activate it just yet
+
+![ESP Custom Signature](../../../autoremediate/images/esp_custom_sig3.jpg)
 
 
 #### ESP SNS Integration
