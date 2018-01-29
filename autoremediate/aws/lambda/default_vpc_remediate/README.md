@@ -56,13 +56,24 @@ This document walks through the steps to create an ESP custom signature, configu
 
 ###### Lambda IAM Role
 
-1. From the IAM Dashboard, under Roles, select Create new role
-2. Select the AWS Lambda role type 
-3. Attach two policies:
+1. From the IAM Dashboard, under Roles, select Create role
+
+![AWS IAM Policy](../../../images/aws_iam_role1.jpg)
+
+2. Select the AWS Lambda role type, then Next: Permissions 
+
+![AWS IAM Policy](../../../images/aws_iam_role2.jpg)
+
+3. Attach **two** policies:
     * Check the policy we created above; *default-vpc-lambda*
     * Check the AWS managed policy; *AWSLambdaBasicExecutionRole*
-4. Select Next Step 
+4. Select Next: Review
+
+![AWS IAM Policy](../../../images/aws_iam_role3.jpg)
+
 5. Name the role: **default-vpc-lambda** and select Create role
+
+![AWS IAM Policy](../../../images/aws_iam_role4.jpg)
 
 ---
 
