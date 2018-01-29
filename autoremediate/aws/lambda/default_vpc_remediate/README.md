@@ -91,7 +91,8 @@ This document walks through the steps to create an ESP custom signature, configu
 7. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *default-vpc-topic*
 8. Check Enable trigger and select Create function
 
-![AWS IAM Policy](../../../images/aws_lambda2.jpg)
+![AWS IAM Policy](../../../images/aws_lambda2a.jpg)
+![AWS IAM Policy](../../../images/aws_lambda2b.jpg)
 
 9. In the Function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
 
