@@ -19,7 +19,7 @@ This document walks through the steps to create an ESP custom signature, configu
 
 #### ESP SNS Integration
 
-1. Follow the instructions to setup ESP SNS Integration: [ESP SNS Integration](https://esp.evident.io/control_panel/integrations/amazon_sns/new)
+1. Follow the instructions to setup ESP SNS Integration: [ESP SNS Integration](https://esp.evident.io/control_panel/integrations/amazon_sns/)
     * SNS Topic Name: **default-vpc-topic**
     * Team: Select the same team(s) as above in the Create Custom Signature step
     * Alert Types: **Fail** (Uncheck all others)
