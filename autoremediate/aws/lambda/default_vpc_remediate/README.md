@@ -87,19 +87,19 @@ This document walks through the steps to create an ESP custom signature, configu
 
 4. Name your function
 5. Choose an existing role
-6. Select the Lambda Role we created above; *default-vpc-lambda*
+6. From the Existing role drop-down menu, select the Lambda Role we created above; *default-vpc-lambda*
 7. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *default-vpc-topic*
-8. Check Enable trigger and select Next
+8. Check Enable trigger and select Create function
 
 ![AWS IAM Policy](../../../images/aws_lambda2.jpg)
 
-9. In the Lambda function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
+9. In the Function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
 
 ![AWS IAM Policy](../../../images/aws_lambda3a.jpg)
 
 10. Under Execution role
     * Double check your Existing role (refer to step 6)
-11. Under Basic settings and enter the following:
+11. Under Basic settings
     * Set the timeout value to 1 minute, 30 seconds
 12. Select Save
 
