@@ -52,7 +52,7 @@ This document walks through the steps to create an ESP custom signature, configu
 4. Name the policy: **default-vpc-lambda**
 5. Select Create policy
 
-![AWS IAM Policy](../../../images/aws_iam_policy3.jpg)
+![AWS IAM Policy](../../../images/aws_iam_policy4.jpg)
 
 ###### Lambda IAM Role
 
