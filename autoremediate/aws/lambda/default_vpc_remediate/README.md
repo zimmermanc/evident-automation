@@ -13,7 +13,7 @@ This document walks through the steps to create an ESP custom signature, configu
 3. Create a New signature
     * Name: **Remove Default VPC**
     * Risk Level: **Low**
-    * Identifier: **AWS::VPC::???**
+    * Identifier: **AWS::VPC::099**
     * Description: "Attempts to delete the AWS default VPC from offending regions."
     * Select an External Account (or Accounts) and Submit
 
@@ -24,6 +24,7 @@ This document walks through the steps to create an ESP custom signature, configu
 
 ![ESP Custom Signature](../../../images/esp_custom_sig3.jpg)
 
+---
 
 #### ESP SNS Integration
 
@@ -33,16 +34,25 @@ This document walks through the steps to create an ESP custom signature, configu
     * Alert Types: **Fail** (Uncheck all others)
     * Signatures: Select **Amazon Low Risk Signatures** and choose the custom signature we just created; *Remove Default VPC*
 
+---
 
 #### Create IAM Policy and Role for Lambda
 
 ###### Lambda IAM Policy
 
-1. From the AWS Console, IAM Dashboard, under Policies, select Create Policy
-2. Select Create Your Own Policy
-3. Name the policy: **default-vpc-lambda**
-4. In the Policy Document, copy & paste the policy from the following link: [AWS_EC2_default_vpc_policy.json](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_policy.json)
-5. Select Create Policy
+1. From the AWS Console, IAM Dashboard, under Policies, select Create policy
+
+![AWS IAM Policy](../../../images/aws_iam_policy2.jpg)
+
+2. In the Policy Document, select the JSON tab and copy & paste the policy from the following link: [AWS_EC2_default_vpc_policy.json](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_policy.json)
+3. Select Review policy
+
+![AWS IAM Policy](../../../images/aws_iam_policy3.jpg)
+
+4. Name the policy: **default-vpc-lambda**
+5. Select Create policy
+
+![AWS IAM Policy](../../../images/aws_iam_policy3.jpg)
 
 ###### Lambda IAM Role
 
@@ -54,6 +64,7 @@ This document walks through the steps to create an ESP custom signature, configu
 4. Select Next Step 
 5. Name the role: **default-vpc-lambda** and select Create role
 
+---
 
 #### Create Auto-Remediation Lambda Function
 
@@ -69,6 +80,7 @@ This document walks through the steps to create an ESP custom signature, configu
     * No VPC access is required
 9. Select Next and Create function
 
+---
 
 #### Activate ESP Custom Signature
 
@@ -76,6 +88,7 @@ This document walks through the steps to create an ESP custom signature, configu
 2. On the top pane, select Control Panel, then Custom Signatures from the left-side column
 3. Locate the *Remove Default VPC* signature, select View and Activate
 
+---
 
 #### Check CloudWatch Logs for Auto-Remediate Output
 
