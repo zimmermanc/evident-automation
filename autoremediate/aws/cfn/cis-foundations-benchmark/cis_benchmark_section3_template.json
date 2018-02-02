@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description" : "AWS CIS 3.x Benchmark v1.1.0 11-09-2016 remediation template. (Also covers Benchmark CIS 2.1 - 2.4)",
+  "Description" : "AWS CIS Foundations Benchmark v1.1.0 11-09-2016 remediation template. (Remediates Sections 3.x & 2.1-2.4)",
 
   "Parameters" : {
 
