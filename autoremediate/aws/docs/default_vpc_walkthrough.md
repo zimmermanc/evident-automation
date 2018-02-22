@@ -13,7 +13,7 @@ This document walks through the steps to create an ESP custom signature, configu
     * Identifier: **AWS::VPC::099**
     * Description: "Attempts to delete the AWS default VPC from offending regions."
     * Select an External Account (or Accounts) and Submit
-4. Copy & paste the code from the following link: [AWS_EC2 - default_vpc_check.rb](https://github.com/EvidentSecurity/custom_signatures/blob/master/AWS_EC2%20-%20default_vpc_check.rb)
+4. Copy & paste the code from the following link: [AWS_EC2 - default_vpc_check.rb](https://github.com/EvidentSecurity/custom_signatures/blob/master/AWS/sample_codes/AWS_EC2%20-%20default_vpc_check.rb)
 5. Save your signature, but don't activate it just yet
 
 ---
