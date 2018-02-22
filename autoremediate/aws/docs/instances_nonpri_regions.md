@@ -13,7 +13,7 @@ This document walks through the steps to create an ESP custom signature, configu
     * Identifier: **AWS::EC2::???**
     * Description: "Identifies running/stopped instances in non-priority regions and attempts to; 1.) Create a backup image (AMI) of the EC2 instance and 2.) Terminate the instance."
     * Select a Team (or Teams) and Submit
-    * Copy & paste the code from the following link: [AWS_EC2 - instances_nonpri_regions.rb](https://github.com/EvidentSecurity/custom_signatures/blob/master/AWS_EC2%20-%20instances_nonpri_regions.rb)
+    * Copy & paste the code from the following link: [AWS_EC2 - instances_nonpri_regions.rb](https://github.com/EvidentSecurity/custom_signatures/blob/master/AWS/sample_codes/AWS_EC2%20-%20instances_nonpri_regions.rb)
     * Modify the list ```c.valid_regions   = [:eu_west_1, :ap_northeast_1]``` to include your non-priority regions
 4. Save your signature, but don't activate it just yet
 
