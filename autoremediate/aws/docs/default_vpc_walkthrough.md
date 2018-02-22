@@ -7,22 +7,14 @@ This document walks through the steps to create an ESP custom signature, configu
 
 1. Login to ESP
 2. On the top pane, select Control Panel, then Custom Signatures from the left-side column
-
-![ESP Custom Signature](../../../images/esp_custom_sig1.jpg)
-
 3. Create a New signature
     * Name: **Remove Default VPC**
     * Risk Level: **Low**
     * Identifier: **AWS::VPC::099**
     * Description: "Attempts to delete the AWS default VPC from offending regions."
     * Select an External Account (or Accounts) and Submit
-
-![ESP Custom Signature](../../../images/esp_custom_sig2.jpg)
-
 4. Copy & paste the code from the following link: [AWS_EC2 - default_vpc_check.rb](https://github.com/EvidentSecurity/custom_signatures/blob/master/AWS_EC2%20-%20default_vpc_check.rb)
 5. Save your signature, but don't activate it just yet
-
-![ESP Custom Signature](../../../images/esp_custom_sig3.jpg)
 
 ---
 
@@ -41,39 +33,20 @@ This document walks through the steps to create an ESP custom signature, configu
 ###### Lambda IAM Policy
 
 1. From the AWS Console, IAM Dashboard, under Policies, select Create policy
-
-![AWS IAM Policy](../../../images/aws_iam_policy2.jpg)
-
 2. In the Policy Document, select the JSON tab and copy & paste the policy from the following link: [AWS_EC2_default_vpc_policy.json](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_policy.json)
 3. Select Review policy
-
-![AWS IAM Policy](../../../images/aws_iam_policy3.jpg)
-
 4. Name the policy: **default-vpc-lambda**
 5. Select Create policy
-
-![AWS IAM Policy](../../../images/aws_iam_policy4.jpg)
 
 ###### Lambda IAM Role
 
 1. From the IAM Dashboard, under Roles, select Create role
-
-![AWS IAM Policy](../../../images/aws_iam_role1.jpg)
-
 2. Select the AWS Lambda role type, then Next: Permissions 
-
-![AWS IAM Policy](../../../images/aws_iam_role2.jpg)
-
 3. Attach **two** policies:
     * Check the policy we created above; *default-vpc-lambda*
     * Check the AWS managed policy; *AWSLambdaBasicExecutionRole*
 4. Select Next: Review
-
-![AWS IAM Policy](../../../images/aws_iam_role3.jpg)
-
 5. Name the role: **default-vpc-lambda** and select Create role
-
-![AWS IAM Policy](../../../images/aws_iam_role4.jpg)
 
 ---
 
@@ -82,29 +55,17 @@ This document walks through the steps to create an ESP custom signature, configu
 1. From the AWS Lambda Dashboard, select Create function
 2. Select Blueprints and the blueprint; *sns-message-python*
 3. Select Configure
-
-![AWS IAM Policy](../../../images/aws_lambda1.jpg)
-
 4. Name your function
 5. Choose an existing role
 6. From the Existing role drop-down menu, select the Lambda Role we created above; *default-vpc-lambda*
 7. From the SNS topic drop-down menu, select the SNS topic we created in the integration step; *default-vpc-topic*
 8. Check Enable trigger and select Create function
-
-![AWS IAM Policy](../../../images/aws_lambda2a.jpg)
-![AWS IAM Policy](../../../images/aws_lambda2b.jpg)
-
 9. In the Function code window, copy & paste the following auto-remediation script: [AWS_EC2_default_vpc_remediate.py](https://github.com/EvidentSecurity/automation/blob/master/autoremediate/aws/lambda/default_vpc_remediate/AWS_EC2_default_vpc_remediate.py)
-
-![AWS IAM Policy](../../../images/aws_lambda3a.jpg)
-
 10. Under Execution role
     * Double check your Existing role (refer to step 6)
 11. Under Basic settings
     * Set the timeout value to 1 minute, 30 seconds
 12. Select Save
-
-![AWS IAM Policy](../../../images/aws_lambda3b.jpg)
 
 ---
 
