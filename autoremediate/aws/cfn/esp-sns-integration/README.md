@@ -31,6 +31,8 @@ On the CloudFormation Dashboard, click on the **Events** tab to follow your Stac
 
 Here you will find the configuration information needed to complete a new Amazon SNS integration.
 
+---
+
 ### ESP
 
 1. Login to ESP
