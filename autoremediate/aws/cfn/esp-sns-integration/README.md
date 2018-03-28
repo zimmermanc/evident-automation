@@ -27,7 +27,7 @@ numbers of recipients.
 
 On the CloudFormation Dashboard, click on the **Events** tab to follow your Stacks progress.
 
-8. Once the Stack has been created successfully, select the *Outputs* tab.
+8. Once the Stack has been created successfully, select the **Outputs** tab.
 
 Here you will find the configuration information needed to complete a new Amazon SNS integration.
 
