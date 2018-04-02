@@ -28,10 +28,11 @@ import time
 #=== Configuration ===
 
 # ESP API Access Key Credentials
-public = <public key>
-secret = <secret key>
+public = <public>
+secret = <secret>
 
 # List of External Accounts Ids to update
+# If none are specified, then all external accounts will be updated
 external_account_ids = [<id>, <id>, ...]
 
 # List of Signature Identifier - Risk Level pairs to update
@@ -39,10 +40,15 @@ identifier_to_risk_levels = {}
 identifier_to_risk_levels['AWS:CONFIG-001'] = 'high'
 identifier_to_risk_levels['AWS:VPC-001'] = 'low'
 identifier_to_risk_levels['AWS:VPC-006'] = 'low'
-identifier_to_risk_levels['AWS:VPC-007'] = 'low'
+identifier_to_risk_levels['AZU:NSG-001'] = 'low'
 
 # Number of signatures to retrieve
-NUM_OF_SIGS = 2 # In hundreds
+NUM_OF_SIGS = 3 # In hundreds
+
+# DO NOT MODIFY
+sig_prefix_to_provider = {}
+sig_prefix_to_provider['AWS'] = 'amazon'
+sig_prefix_to_provider['AZU'] = 'azure'
 
 #=== End Configuration ===
 
@@ -140,6 +146,24 @@ for x in xrange(NUM_OF_SIGS):
 for sig in signature_list:
     identifier_to_sig_id[sig['attributes']['identifier']] = int(sig['id'])
     
+# Retrieve accounts and account types
+account_id_to_provider = {}
+if not external_account_ids:
+    ev_create_url = '/api/v2/external_accounts?page[size]=100'
+    data = ''
+    ev_response_json = call_api('GET', ev_create_url, data)
+    for external_accounts in ev_response_json['data']:
+        external_account_ids.append(int(external_accounts['id']))
+        account_id_to_provider[int(external_accounts['id'])] = external_accounts['attributes']['provider']
+else:
+    external_accounts = []
+    for external_account_id in external_account_ids:
+        ev_create_url = '/api/v2/external_accounts/%d' % external_account_id
+        data = ''
+        ev_response_json = call_api('GET', ev_create_url, data)
+        external_account = ev_response_json['data']
+        account_id_to_provider[external_account_id] = external_account['attributes']['provider']
+        
 # Iterate for each External Account
 for external_account_id in external_account_ids:
     print("Modify risk levels for account %d" % external_account_id)
@@ -181,7 +205,7 @@ for external_account_id in external_account_ids:
                 num_of_fails += 1
                 print('failed to update custom risk level: %s to %s' % (identifier, identifier_to_risk_levels[identifier]))
         # Custom Risk Level doesn't exist, need to create
-        else:
+        elif sig_prefix_to_provider[identifier[:3]] == account_id_to_provider[external_account_id]:
             # Construct body
             data = json.dumps({
                 'data': {
@@ -199,6 +223,8 @@ for external_account_id in external_account_ids:
             else:
                 num_of_fails += 1
                 print('failed to create custom risk level: %s to %s' % (identifier, identifier_to_risk_levels[identifier]))
+        # else: Account type doesn't match sig type, so skip
+            
 
 if num_of_fails == 0:
     print('Completed')
