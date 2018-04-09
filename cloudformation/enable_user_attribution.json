@@ -1,0 +1,229 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Parameters" : {
+    "EvidentUAEndpoint": {
+      "Description": "ESP's subscription endpoint.",
+      "Type": "String"
+    },
+    "EspServiceRoleName": {
+      "Description": "ESP's service role name",
+      "Type": "String"
+    }
+  },
+  "Outputs": {
+    "UserAttributionCloudTrailName": {
+      "Description": "CloudTrail Name",
+      "Value" : {"Fn::Select": [ 1, { "Fn::Split" : [ "/", {"Fn::GetAtt" : ["EvidentUATrail" , "Arn"]} ] }]}
+    }
+  },
+  "Resources" : {
+    "EvidentUAS3Bucket": {
+      "DeletionPolicy" : "Retain",
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+      }
+    },
+    "EvidentUABucketPolicy" : {
+      "Type" : "AWS::S3::BucketPolicy",
+      "Properties" : {
+        "Bucket" : {"Ref" : "EvidentUAS3Bucket"},
+        "PolicyDocument" : {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "AWSCloudTrailAclCheck",
+              "Effect": "Allow",
+              "Principal": { "Service":"cloudtrail.amazonaws.com"},
+              "Action": "s3:GetBucketAcl",
+              "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref":"EvidentUAS3Bucket"}]]}
+            },
+            {
+              "Sid": "AWSCloudTrailWrite",
+              "Effect": "Allow",
+              "Principal": { "Service":"cloudtrail.amazonaws.com"},
+              "Action": "s3:PutObject",
+              "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref":"EvidentUAS3Bucket"}, "/AWSLogs/", {"Ref":"AWS::AccountId"}, "/*"]]},
+              "Condition": {
+                "StringEquals": {
+                  "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EvidentUATopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "Subscription": [ {
+          "Endpoint": { "Ref": "EvidentUAEndpoint" },
+          "Protocol": "HTTPS" } ]
+      }
+    },
+    "EvidentUATopicPolicy" : {
+      "Type" : "AWS::SNS::TopicPolicy",
+      "Properties" : {
+        "Topics" : [{"Ref":"EvidentUATopic"}],
+        "PolicyDocument" : {
+          "Version": "2008-10-17",
+          "Statement": [
+            {
+              "Sid": "AWSCloudTrailSNSPolicy",
+              "Effect": "Allow",
+              "Principal": { "Service":"cloudtrail.amazonaws.com"},
+              "Resource": "*",
+              "Action": "SNS:Publish"
+            }
+          ]
+        }
+      }
+    },
+    "EvidentUAKMSKey" : {
+      "Type" : "AWS::KMS::Key",
+      "Properties" : {
+        "Description" : "KMS key for Cloudtrail encryption",
+        "Enabled" : true,
+        "EnableKeyRotation" : true,
+        "KeyPolicy" : {
+          "Version": "2012-10-17",
+          "Id": "Key policy created for CloudTrail",
+          "Statement": [
+            {
+              "Sid": "Enable IAM User Permissions",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": { "Fn::Join" : [ ":", [ "arn:aws:iam:", { "Ref" : "AWS::AccountId" }, "root" ] ] }
+              },
+              "Action": "kms:*",
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow CloudTrail to encrypt logs",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Action": "kms:GenerateDataKey*",
+              "Resource": "*",
+              "Condition": {
+                "StringLike": {
+                  "kms:EncryptionContext:aws:cloudtrail:arn": { "Fn::Join" : [ ":", [ "arn:aws:cloudtrail:*", { "Ref" : "AWS::AccountId" }, "trail/*" ] ] }
+                }
+              }
+            },
+            {
+              "Sid": "Allow CloudTrail to describe key",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Action": "kms:DescribeKey",
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow principals in the account to decrypt log files",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": [
+                "kms:Decrypt",
+                "kms:ReEncryptFrom"
+              ],
+              "Resource": "*",
+              "Condition": {
+                "StringEquals": {
+                  "kms:CallerAccount": { "Ref" : "AWS::AccountId" }
+                },
+                "StringLike": {
+                  "kms:EncryptionContext:aws:cloudtrail:arn": { "Fn::Join" : [ ":", [ "arn:aws:cloudtrail:*", { "Ref" : "AWS::AccountId" }, "trail/*" ] ] }
+                }
+              }
+            },
+            {
+              "Sid": "Allow alias creation during setup",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": "kms:CreateAlias",
+              "Resource": "*",
+              "Condition": {
+                "StringEquals": {
+                  "kms:CallerAccount": { "Ref" : "AWS::AccountId" },
+                  "kms:ViaService": { "Fn::Join" : [ ".", [ "ec2", { "Ref" : "AWS::Region" }, "amazonaws.com" ] ] }
+                }
+              }
+            },
+            {
+              "Sid": "Enable cross account log decryption",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": [
+                "kms:Decrypt",
+                "kms:ReEncryptFrom"
+              ],
+              "Resource": "*",
+              "Condition": {
+                "StringEquals": {
+                  "kms:CallerAccount": { "Ref" : "AWS::AccountId" }
+                },
+                "StringLike": {
+                  "kms:EncryptionContext:aws:cloudtrail:arn": { "Fn::Join" : [ ":", [ "arn:aws:cloudtrail:*", { "Ref" : "AWS::AccountId" }, "trail/*" ] ] }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EvidentUATrail" : {
+      "DependsOn" : ["EvidentUABucketPolicy", "EvidentUATopicPolicy"],
+      "Type" : "AWS::CloudTrail::Trail",
+      "Properties" : {
+        "S3BucketName" : {"Ref":"EvidentUAS3Bucket"},
+        "SnsTopicName" : {"Fn::GetAtt":["EvidentUATopic","TopicName"]},
+        "KMSKeyId"  : {"Ref":"EvidentUAKMSKey"},
+        "IsLogging" : true,
+        "IncludeGlobalServiceEvents": true,
+        "IsMultiRegionTrail" : true,
+        "EventSelectors": [{"ReadWriteType": "WriteOnly"}]
+      }
+    },
+    "EvidentUserAttribution" : {
+       "Type": "AWS::IAM::Policy",
+       "Properties": {
+          "PolicyName": "EvidentUserAttribution",
+          "Roles": [ { "Ref": "EspServiceRoleName" } ],
+          "PolicyDocument": {
+             "Version" : "2012-10-17",
+             "Statement": [
+                {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:Get*",
+                    "s3:List*"
+                ],
+                "Resource": [
+                    {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"EvidentUAS3Bucket"}]]},
+                    {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"EvidentUAS3Bucket"},"/*"]]}
+                ]
+                },
+                {
+                   "Effect": "Allow",
+                   "Action": [
+                       "cloudtrail:GetEventSelectors"
+                   ],
+                   "Resource": [
+                        "*"
+                   ]
+                }
+             ]
+          }
+       }
+    }
+  }
+}

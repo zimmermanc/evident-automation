@@ -1,0 +1,39 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description":"Evident Onboarding Cloudformation Template",
+  "Outputs": {
+    "EvidentIAMServiceRoleARN": {
+      "Description": "Evident Service Role (IAM)",
+      "Value" : { "Fn::GetAtt" : [ "EvidentServiceRole" , "Arn" ] }
+    },
+    "ExternalID": {
+      "Description": "External ID",
+      "Value": {"Fn::Select": [ 2, { "Fn::Split" : [ "/", {"Ref": "AWS::StackId"} ] }]}
+    }
+  },
+  "Resources" : {
+
+    "EvidentServiceRole" : {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "ManagedPolicyArns": ["arn:aws:iam::aws:policy/SecurityAudit"],
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ 
+            {
+              "Sid": "EvidentCrossAccountAccess",
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {"sts:ExternalId":{"Fn::Select": [ 2, { "Fn::Split" : [ "/", {"Ref": "AWS::StackId"} ] }]}}
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "613698206329"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
