@@ -12,7 +12,7 @@
       "Description": "Evident Service Role (IAM) ARN",
       "Value": {
         "Fn::GetAtt": [
-          "EvidentServiceRoleUserAttribution",
+          "EvidentSNSServiceRole",
           "Arn"
         ]
       }
@@ -59,7 +59,7 @@
     }
   },
   "Resources": {
-    "EvidentServiceRoleUserAttribution": {
+    "EvidentSNSServiceRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
