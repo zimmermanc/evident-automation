@@ -135,7 +135,7 @@ data = ''
 page_num = 1
 has_next = True
 while has_next:
-    ev_create_url = '/api/v2/external_accounts?page[number]=%d&page[size]=1' % page_num
+    ev_create_url = '/api/v2/external_accounts?page[number]=%d&page[size]=100' % page_num
     ev_response_json = call_api('GET', ev_create_url, data)
     for account in ev_response_json['data']:
         if 'id' in account and account['id'] not in excluded:
