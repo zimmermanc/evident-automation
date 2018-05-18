@@ -1,0 +1,136 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "ESP SNS to SQS Template",
+  "Outputs": {
+    "SNSTopicArn": {
+      "Description": "Evident Integration SNS Topic ARN",
+      "Value": {
+        "Ref": "EvidentSNSIntegration"
+      }
+    },
+    "SQSArn": {
+      "Description": "Evident Integration SQS Queue",
+      "Value": {
+        "Fn::GetAtt": [
+          "EvidentSNStoSQS",
+          "Arn"
+        ]
+      }
+    },
+    "EvidentRoleArn": {
+      "Description": "Evident Service Role (IAM) ARN",
+      "Value": {
+        "Fn::GetAtt": [
+          "EvidentServiceRoleSNSIntegration",
+          "Arn"
+        ]
+      }
+    },
+    "EspExternalId": {
+      "Description": "ExternalId",
+      "Value": {
+        "Fn::Select": [ 2, { "Fn::Split" : [ "/", {"Ref": "AWS::StackId"} ] }]
+      }
+    }
+  },
+  "Parameters": {
+    "EspEvidentAccountId": {
+      "Description": "EvidentIO Account ID",
+      "Default": "613698206329",
+      "AllowedPattern": "[0-9]+",
+      "MaxLength": "12",
+      "MinLength": "12",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "EvidentServiceRoleSNSIntegration": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "EvidentCrossAccountAccess",
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {
+                  "sts:ExternalId": {
+                    "Fn::Select": [ 2, { "Fn::Split" : [ "/", {"Ref": "AWS::StackId"} ] }]
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      {
+                        "Ref": "EspEvidentAccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "EvidentSNSIntegration",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sns:Publish"
+                  ],
+                  "Resource": {
+                    "Ref": "EvidentSNSIntegration"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "EvidentSNSIntegration": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "Evident-SNS-Integration",
+        "Subscription" : [{
+          "Endpoint" : { "Fn::GetAtt" : ["EvidentSNStoSQS", "Arn"]},
+          "Protocol" : "sqs"
+        }]
+      }
+    },
+    "EvidentSNStoSQS" : {
+      "Type" : "AWS::SQS::Queue"
+    },
+    "EvidentSNStoSQSPolicy": {
+      "Type" : "AWS::SQS::QueuePolicy",
+      "Properties" : {
+        "PolicyDocument":  {
+          "Id":"QueuePolicy",
+          "Statement" : [{
+            "Sid":"Allow-EvidentSNSIntegration-push-to-EvidentSNStoSQSPolicy",
+            "Effect":"Allow",
+            "Principal" : {"AWS" : "*"},
+            "Action":["sqs:SendMessage"],
+            "Resource": {"Fn::GetAtt": ["EvidentSNStoSQS","Arn"]},
+            "Condition": {
+              "ArnEquals": { "aws:SourceArn": { "Ref" : "EvidentSNSIntegration" }}
+
+            }
+          }]
+        },
+        "Queues" : [{"Ref" : "EvidentSNStoSQS"}]
+      }
+    }
+  }
+}
