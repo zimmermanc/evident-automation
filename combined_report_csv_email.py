@@ -31,7 +31,7 @@
 #   `python --version`
 #
 # * Install the ESP Python SDK
-#   https://github.com/EvidentSecurity/esp-sdk-python2 
+#   https://github.com/EvidentSecurity/esp-sdk-python
 # 
 # * Valid ESP credentials / API keys
 #   https://esp.evident.io/settings/api_keys
