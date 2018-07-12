@@ -56,7 +56,7 @@ keyring==10.4.0
 msrest==0.4.18
 msrestazure==0.4.16
 oauthlib==2.0.6
-paramiko==2.3.1
+paramiko==2.3.2
 pyasn1==0.3.7
 pycparser==2.18
 Pygments==2.2.0
