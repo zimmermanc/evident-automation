@@ -45,7 +45,7 @@ def lambda_handler(event, context):
 
     # If the signature didn't report a failure, exit..
     #
-    if status != 'fail':
+    if (status != 'fail' and status != 'warn'):
         print('=> Nothing to do.')
         exit()
 
@@ -63,7 +63,7 @@ def lambda_handler(event, context):
     region = re.sub('_','-',regions['attributes']['code'])
 
     try:
-        db_snap_id = metadata['attributes']['data']['resource_id']
+        db_snap_id = alert['data']['attributes']['resource']
     except Exception as e:
         print('=> No RDS snapshot to evaluate.')
     else:
