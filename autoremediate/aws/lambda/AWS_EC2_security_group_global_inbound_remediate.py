@@ -55,7 +55,7 @@ def lambda_handler(event, context):
 
     # If the signature didn't report a failure, exit..
     #
-    if status != 'fail':
+    if (status != 'fail' and status != 'warn'):
         print('=> Nothing to do.')
         exit()
 
@@ -73,7 +73,7 @@ def lambda_handler(event, context):
     region = re.sub('_','-',regions['attributes']['code'])
 
     try:
-        sg_id = metadata['attributes']['data']['resource_id']
+        sg_id = alert['data']['attributes']['resource']
     except:
         print('=> No security group to evaluate.')
     else:
