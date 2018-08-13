@@ -40,12 +40,7 @@ secret = <secret>
 excluded = []
 
 # DO NOT MODIFY
-signatures = [
-    {'id': '205', 'provider': 'amazon'}, # AWS:RDS-011
-    {'id': '208', 'provider': 'amazon'}  # AWS:RDS-012
-]
-
-#=== End Configuration ===
+signature_ids = [205, 208] # AWS:RDS-011, AWS:RDS-012
 
 #=== End Configuration ===
 
@@ -64,7 +59,8 @@ def call_api(action, url, data, count = 0):
     now = datetime.now()
     stamp = mktime(now.timetuple())
     dated = format_date_time(stamp)
-    
+        
+
     # Create Authorization Header
     canonical = '%s,application/vnd.api+json,%s,%s,%s' % (action, data_hash, url, dated)
     key_bytes= bytes(secret, 'UTF-8')
@@ -98,6 +94,7 @@ def call_api(action, url, data, count = 0):
                     # Give-up after 5 retries
                     return false
             elif int(error['status']) == 422:
+                print(ev_response_json)
                 return '422'
             else:
                 # Throw Exception and end script if any other error occurs
@@ -134,29 +131,36 @@ account_ids = []
 data = ''
 page_num = 1
 has_next = True
+external_account_ids = []
 while has_next:
     ev_create_url = '/api/v2/external_accounts?page[number]=%d&page[size]=100' % page_num
     ev_response_json = call_api('GET', ev_create_url, data)
     for account in ev_response_json['data']:
         if 'id' in account and account['id'] not in excluded:
-            for signature in signatures:    
-                if account['attributes']['provider'] == signature['provider']:
-                    data = json.dumps({
-                        'data': {
-                            'type': 'disabled_signature',
-                            'attributes': {
-                                'signature_id': signature['id']
-                            }
-                        }
-                    })
-                    ev_create_url2 = '/api/v2/external_accounts/%s/disabled_signatures' % account['id']
-                    ev_response_json2 = call_api('POST', ev_create_url2, data)
-                    if ev_response_json2 != '422':
-                        print("Disabled Signature %s on account %s" % (signature['id'], account['id'])) 
-                    else:
-                        print("Signature %s was already disabled on account %s" % (signature['id'], account['id'])) 
-
+            external_account_ids.append(int(account['id']))
     page_num += 1
-    has_next = ('next' in ev_response_json['links'])
+    has_next = ('next' in ev_response_json['links'])        
+    
+# Disable Signatures
+data = json.dumps({
+    'data': {
+        'type': 'disabled_signature',
+        'attributes': {
+            'signature_ids': signature_ids,
+            'external_account_ids': external_account_ids
+        }
+    }
+})
+print("Signature IDs to disable: %s" % signature_ids)
+print("For these External Accounts IDs: %s" % external_account_ids)
+ev_create_url2 = '/api/v2/external_accounts/disabled_signatures'
+ev_response_json2 = call_api('DELETE', ev_create_url2, data)
+if ev_response_json2 != '422':
+    print("Enabled signatures (necessary step)")
+ev_response_json2 = call_api('POST', ev_create_url2, data)
+if ev_response_json2 == '422':
+    print("Failed to disable signatures")
+else:
+    print("Disabled signatures")
 
 #=== End Main Script ===
