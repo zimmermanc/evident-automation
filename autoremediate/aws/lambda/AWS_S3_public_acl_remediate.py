@@ -52,7 +52,7 @@ def lambda_handler(event, context):
 
     # If the signature didn't report a failure, exit..
     #
-    if status != 'fail':
+    if (status != 'fail' and status != 'warn'):
         print('=> Nothing to do.')
         exit()
 
@@ -70,7 +70,7 @@ def lambda_handler(event, context):
     region = re.sub('_','-',regions['attributes']['code'])
 
     try:
-        bucket = metadata['attributes']['data']['resource_id']
+        bucket = alert['data']['attributes']['resource']
     except:
         print('=> No S3 Bucket to evaluate.')
     else:

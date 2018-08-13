@@ -51,7 +51,7 @@ def lambda_handler(event, context):
 
     # If the signature didn't report a failure, exit..
     #
-    if status != 'fail':
+    if (status != 'fail' and status != 'warn'):
         print('=> Nothing to do.')
         exit()
 
@@ -69,7 +69,7 @@ def lambda_handler(event, context):
     region = re.sub('_','-',regions['attributes']['code'])
 
     try:
-        volume = metadata['attributes']['data']['resource_id']
+        volume = alert['data']['attributes']['resource']
     except Exception as e:
         print('=> No EBS Volumes to evaluate.')
     else:
