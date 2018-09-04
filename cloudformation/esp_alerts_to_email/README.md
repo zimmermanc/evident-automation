@@ -30,7 +30,7 @@ The cloudformation template requires the following parameters:
 - `required` **TargetEmail** : This is the target email address to be subscribed to the SNS topic
 - **EmailSNSTopicName** : This is SNS topic name which will send the formatted email alert
 - **SNSIntegrationTopicName** : This is the SNS topic in which Evident sends the raw alert to. This SNS topic will trigger lambda
-- **EspEvidentAccountId** : 
+- **EspEvidentAccountId** : This is the ESP account ID which will push the SNS message. You can leave it as it is.
 
 ### RESOURCES CREATED:
 - SNS Topic (for Evident to send the alert to) + Evident IAM role which has access to push to this topic
