@@ -73,7 +73,7 @@ def get_risk_levels_for_account(account_id, signatures_api):
 
 @retry(wait=wait_exponential(multiplier=1, max=10))
 def create_custom_risk_level(account_id, signature, signatures_api):
-	resp = signatures_api.set_custom_risk_level_for_external_account(account_id, signature.id, signature.custom_risk_level)
+	resp = signatures_api.set_custom_risk_level_for_external_account(account_id, signature.custom_risk_level, signature.id)
 	return
 
 @retry(wait=wait_exponential(multiplier=1, max=10))
