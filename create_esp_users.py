@@ -150,8 +150,10 @@ def read_user_data(csv_file_name):
                     team_names.append(team)
             except IndexError:
                 team_names = ''
+            print(team_names)
 
             team_ids = list_esp_teams(team_names)
+            print(team_ids)
 
             user = ( row[0], row[1], row[2], role, team_ids )
             users.append(user)
@@ -168,6 +170,8 @@ def list_esp_teams(team_names):
     timeout = (3, 10)
 
     team_ids = []
+    if team_names == ['']:
+        return team_ids
     for team in team_names:
         uri = '/api/v2/teams.json?filter[name_eq]=%s' % (team)
         response = api_call(method, uri, data, timeout)
@@ -191,8 +195,9 @@ def create_esp_users(users):
     timeout = (3, 10)
 
     for user in users:
-        role_id = '3' if (user[3] == 'customer') else '2'
-        data = '{"data": {"type": "users", "attributes": {"first_name": "%s", "last_name": "%s", "email": "%s", "role_id": "%s", "team_ids": %s }}}' % (user[0], user[1], user[2], role_id, user[4] )
+        role_id = '3' if (user[3] == 'customer' or user[3] == 'Customer') else '2'
+        access_level = 'organization_level' if (user[4] == []) else 'team_level'
+        data = '{"data": {"type": "users", "attributes": {"first_name": "%s", "last_name": "%s", "email": "%s", "role_id": "%s", "team_ids": %s, "access_level": "%s" }}}' % (user[0], user[1], user[2], role_id, user[4], access_level)
         response = api_call(method, uri, data, timeout)
 
         try:
